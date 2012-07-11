@@ -28,11 +28,12 @@ module Verso
 
     def slug
       # swiped from ActiveSupport::Inflector
-      parameterized_string = @raw_program_area["title"]
+      parameterized_string = @raw_program_area["title"].dup
       parameterized_string.gsub!(/[^a-z0-9\-_]+/i, '-')
       re_sep = Regexp.escape('-')
       parameterized_string.gsub!(/#{re_sep}{2,}/, '-')
       parameterized_string.gsub!(/^#{re_sep}|#{re_sep}$/i, '')
       parameterized_string.downcase
-    end  end
+    end
+  end
 end
