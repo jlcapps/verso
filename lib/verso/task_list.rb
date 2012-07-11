@@ -25,7 +25,7 @@ module Verso
     end
 
     def each &block
-      duty_areas.each { |da| block.call(DutyArea.new(da)) }
+      duty_areas.each { |da| block.call(DutyArea.new(da, self)) }
     end
   end
 end
