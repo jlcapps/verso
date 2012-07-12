@@ -4,7 +4,6 @@ require 'net/http'
 require 'ostruct'
 
 require 'verso/http_get'
-require 'verso/category_list'
 require 'verso/cluster'
 require 'verso/cluster_list'
 require 'verso/correlation_list'
