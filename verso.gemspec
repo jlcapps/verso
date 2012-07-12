@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Verso::VERSION
   s.authors     = ["Lee Capps"]
   s.email       = ["himself@leecapps.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/jlcapps/verso"
   s.summary     = %q{Verso API wrapper}
   s.description = %q{A Ruby wrapper for the Virginia CTE Resource Center's Web API}
 
