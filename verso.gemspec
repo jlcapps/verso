@@ -22,4 +22,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "fakeweb"
   s.add_development_dependency "rspec"
   s.add_development_dependency "vcr"
+
+  s.required_ruby_version = '>= 1.9.3'
 end
