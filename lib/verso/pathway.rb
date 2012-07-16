@@ -3,14 +3,15 @@ module Verso
     include HTTPGet
 
     def initialize(raw_pathway)
-      @raw_pathway = raw_pathway
+      @raw_pathway = raw_pathway.symbolize_nested_keys!
     end
 
     def method_missing(mname)
-      if @raw_pathway[mname.to_s].nil?
-        @raw_pathway = JSON.parse(http_get("/pathways/#{id}"))["pathway"]
+      if @raw_pathway[mname].nil?
+        @raw_pathway = JSON.parse(http_get("/pathways/#{id}"))["pathway"].
+          symbolize_nested_keys!
       end
-      @raw_pathway[mname.to_s]
+      @raw_pathway[mname]
     end
 
     def occupations

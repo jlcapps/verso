@@ -25,7 +25,7 @@ describe Verso::Standard do
   end
 
   it "should respond to sections" do
-    @standard.sections.first.title.should eq(@section["title"])
+    @standard.sections.first.title.should eq("section title")
   end
 
   it "should respond to goals" do

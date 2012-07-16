@@ -3,16 +3,17 @@ module Verso
     include HTTPGet
 
     def initialize(opts)
-      @raw_credential = opts
+      @raw_credential = opts.symbolize_nested_keys!
     end
 
     def method_missing(mname)
-      if @raw_credential[mname.to_s].nil?
+      if @raw_credential[mname].nil?
         @raw_credential.merge!(
-          JSON.parse(http_get("/credentials/#{id}"))["credential"]
+          JSON.parse(http_get("/credentials/#{id}"))["credential"].
+          symbolize_nested_keys!
         )
       end
-      @raw_credential[mname.to_s]
+      @raw_credential[mname]
     end
 
     def source

@@ -66,8 +66,8 @@ describe Verso::SOLCorrelationList do
   end
 
   it 'compiles the goals' do
-    @correlations.first.standards.count.should eq(2)
     titles = @correlations.first.standards.collect { |s| s.title }
+    titles.count.should eq(2)
     titles.first.should eq('English')
     titles.last.should eq('Science')
   end

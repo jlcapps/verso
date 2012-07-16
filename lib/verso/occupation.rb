@@ -3,14 +3,16 @@ module Verso
     include HTTPGet
 
     def initialize(raw_occupation)
-      @raw_occupation = raw_occupation
+      @raw_occupation = raw_occupation.symbolize_nested_keys!
     end
 
     def method_missing(mname)
-      if @raw_occupation[mname.to_s].nil?
-        @raw_occupation = JSON.parse(http_get("/occupations/#{id}"))["occupation"]
+      if @raw_occupation[mname].nil?
+        @raw_occupation = JSON.parse(
+          http_get("/occupations/#{id}")
+        )["occupation"].symbolize_nested_keys!
       end
-      @raw_occupation[mname.to_s]
+      @raw_occupation[mname]
     end
 
     def related_courses

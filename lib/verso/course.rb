@@ -3,14 +3,15 @@ module Verso
     include HTTPGet
 
     def initialize(raw_course)
-      @raw_course = raw_course
+      @raw_course = raw_course.symbolize_nested_keys!
     end
 
     def method_missing(mname)
-      if !@raw_course.has_key?(mname.to_s)
-        @raw_course = JSON.parse(http_get("/courses/#{code},#{edition}"))
+      if !@raw_course.has_key?(mname)
+        @raw_course = JSON.parse(http_get("/courses/#{code},#{edition}")).
+          symbolize_nested_keys!
       end
-      @raw_course.has_key?(mname.to_s) ? @raw_course[mname.to_s] : super
+      @raw_course.has_key?(mname) ? @raw_course[mname] : super
     end
 
     def task(tid)

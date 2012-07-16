@@ -43,9 +43,7 @@ describe Verso::StandardsList do
     Net::HTTP.stub(:get).and_return(nil)
     raw = { "standards" => @raw_standard.values }
     JSON.stub(:parse).and_return(raw)
-    sl = Verso::StandardsList.new(raw["standards"], course)
-    Verso::StandardsList.should_receive(:new).with(raw["standards"], course).
-      and_return(sl)
     Verso::StandardsList.from_course(course).last.title.should eq("standard title")
+    Verso::StandardsList.from_course(course).first.title.should eq("Science")
   end
 end

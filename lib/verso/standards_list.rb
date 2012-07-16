@@ -3,7 +3,8 @@ module Verso
     include Enumerable
 
     def initialize(raw, context=nil)
-      @raw_standards = raw.is_a?(Array) ? raw : raw.values
+      @raw_standards = (raw.is_a?(Array) ? raw : raw.values).
+        collect { |s| s.symbolize_nested_keys! }
       @context = context
     end
 
@@ -12,13 +13,13 @@ module Verso
         Net::HTTP.get('api.cteresource.org',
                       "/courses/#{course.code},#{course.edition}/standards/",
                       80)
-      )["standards"]
+      ).symbolize_nested_keys![:standards]
       StandardsList.new(raw_standards, course)
     end
 
     def standards
       @standards ||= @raw_standards.
-        sort_by { |s| s["title"] }.
+        sort_by { |s| s[:title] }.
         collect { |raw_standard| Standard.new(raw_standard, @context) }
     end
 

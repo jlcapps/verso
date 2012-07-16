@@ -3,17 +3,17 @@ module Verso
     include HTTPGet
 
     def initialize(raw_standard, context=nil)
-      @raw_standard = raw_standard
+      @raw_standard = raw_standard.symbolize_nested_keys!
       @context = context
     end
 
     def method_missing(mname)
-      if !@raw_standard.has_key?(mname.to_s)
+      if !@raw_standard.has_key?(mname)
         @raw_standard.merge!(JSON.parse(
           http_get("/courses/#{code},#{edition}/standards/#{name}")
-        )["standard"])
+        )["standard"].symbolize_nested_keys!)
       end
-      @raw_standard[mname.to_s]
+      @raw_standard[mname]
     end
 
     def code

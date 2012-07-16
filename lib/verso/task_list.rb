@@ -13,7 +13,7 @@ module Verso
     def duty_areas
       @duty_areas ||= JSON.parse(
         http_get("/courses/#{code},#{edition}/tasks/")
-      )["duty_areas"].to_a
+      ).symbolize_nested_keys![:duty_areas].to_a
     end
 
     def has_optional_task?

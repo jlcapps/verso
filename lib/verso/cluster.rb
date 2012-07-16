@@ -3,22 +3,25 @@ module Verso
     include HTTPGet
 
     def initialize(opts)
-      @raw_cluster = opts
+      @raw_cluster = opts.symbolize_nested_keys!
     end
 
     def method_missing(mname)
-      if !@raw_cluster.has_key?(mname.to_s)
-        @raw_cluster.merge!(JSON.parse(http_get("/clusters/#{id}"))["cluster"])
+      if !@raw_cluster.has_key?(mname)
+        @raw_cluster.merge!(
+          JSON.parse(http_get("/clusters/#{id}"))["cluster"].
+            symbolize_nested_keys!
+        )
       end
-      @raw_cluster[mname.to_s]
+      @raw_cluster[mname]
     end
 
     def id
-      @raw_cluster["id"]
+      @raw_cluster[:id]
     end
 
     def title
-      @title ||= @raw_cluster["title"] || @raw_cluster["cluster"]["title"]
+      @title ||= @raw_cluster[:title] || @raw_cluster[:cluster][:title]
     end
 
     def contact
@@ -26,7 +29,7 @@ module Verso
     end
 
     def slug
-      @raw_cluster["title"].parameterize
+      title.parameterize
     end
 
     def pathways

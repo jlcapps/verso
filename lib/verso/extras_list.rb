@@ -12,7 +12,7 @@ module Verso
       @extras ||= JSON.parse(
         http_get("/courses/#{code},#{edition}/extras/")
       )["extras"].
-        collect { |e| Extra.new(e.merge("code" => code, "edition" => edition)) }
+        collect { |e| Extra.new(e.merge(:code => code, :edition => edition)) }
     end
 
     def each &block
