@@ -1,30 +1,28 @@
 module Verso
-  class Task
+  class Task < Verso::Base
     include HTTPGettable
-
-    def initialize(raw_task)
-      @raw_task = raw_task.symbolize_nested_keys!
-    end
-
-    def method_missing(mname)
-      if !@raw_task.has_key?(mname)
-        @raw_task.merge!(JSON.parse(
-          http_get("/courses/#{code},#{edition}/tasks/#{id}")
-        ).symbolize_nested_keys!)
-      end
-      @raw_task[mname]
-    end
+    attr_reader :code, :definition, :edition, :id, :sensitive, :statement,
+      :questions
+    alias sensitive? sensitive
 
     def essential
-      sensitive ? true : @raw_task[:essential]
+      sensitive ? true : method_missing(:essential)
     end
+    alias essential? essential
 
     def standards
-      @standards ||= StandardsList.new(goals)
+      @standards ||= StandardsList.new(method_missing(:goals))
     end
+    alias goals standards
 
     def bare?
       definition.empty? && standards.sols.empty?
+    end
+
+  private
+
+    def path
+      "/courses/#{code},#{edition}/tasks/#{id}"
     end
   end
 end

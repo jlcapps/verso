@@ -14,7 +14,7 @@ describe Verso::Task do
     end
 
     it "responds to standards" do
-      @task.should_receive(:goals).and_return({})
+      @task.should_receive(:method_missing).with(:goals).and_return({})
       Verso::StandardsList.should_receive(:new)
       @task.standards
     end
