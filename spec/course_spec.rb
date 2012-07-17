@@ -21,7 +21,7 @@ describe Verso::Course do
                          "title" => "Accounting, Advanced",
                          "hours" => nil, "edition" => "2011",
                          "co_op" => true,
-                         "related_resources" => ["extras"],
+                         "related_resources" => ["extras", "standards"],
                          "grade_levels" => "8 9 10",
                          "credentials" => credentials,
                          "occupation_data" => occupation_data,

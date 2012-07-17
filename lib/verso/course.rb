@@ -1,22 +1,18 @@
 module Verso
-  class Course
+  class Course < Verso::Base
     include HTTPGet
-
-    def initialize(raw_course)
-      @raw_course = raw_course.symbolize_nested_keys!
-    end
-
-    def method_missing(mname)
-      if !@raw_course.has_key?(mname)
-        @raw_course = JSON.parse(http_get("/courses/#{code},#{edition}")).
-          symbolize_nested_keys!
-      end
-      @raw_course.has_key?(mname) ? @raw_course[mname] : super
-    end
+    attr_reader :co_op, :code, :complement, :description, :duration,
+      :edition, :grade_levels, :hours, :hs_credit_in_ms, :osha_exempt,
+      :related_resources, :title
+    alias co_op? co_op
+    alias complement? complement
+    alias hs_credit_in_ms? hs_credit_in_ms
+    alias osha_exempt? osha_exempt
 
     def task(tid)
       @tasks ||= {}
-      @tasks[tid] ||= Task.new("code" => code, "edition" => edition, "id" => tid)
+      @tasks[tid] ||= Task.new("code" => code, "edition" => edition,
+                               "id" => tid)
     end
 
     def frontmatter
@@ -36,9 +32,11 @@ module Verso
         collect { |od| OccupationData.new(od) }
     end
 
-    def prerequisites
-      @prerequisites ||= prerequisite_courses.collect { |c| Course.new(c) }
+    def prerequisite_courses
+      @prerequisites ||= method_missing(:prerequisite_courses).
+        collect { |c| Course.new(c) }
     end
+    alias prerequisites prerequisite_courses
 
     def related_courses
       @related_courses ||= method_missing(:related_courses).
@@ -80,6 +78,12 @@ module Verso
                   else
                     []
                   end
+    end
+
+  private
+
+    def path
+      "/courses/#{code},#{edition}"
     end
   end
 end

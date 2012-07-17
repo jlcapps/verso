@@ -1,9 +1,15 @@
+# external
 require 'addressable/uri'
 require 'json'
 require 'net/http'
 require 'ostruct'
 
+# base/mixin/override
+require 'verso/base'
+require 'verso/hash'
 require 'verso/http_get'
+
+# resources and children
 require 'verso/cluster'
 require 'verso/cluster_list'
 require 'verso/correlation_list'
@@ -19,7 +25,6 @@ require 'verso/examination_list'
 require 'verso/extra'
 require 'verso/extras_list'
 require 'verso/frontmatter'
-require 'verso/hash'
 require 'verso/occupation'
 require 'verso/occupation_data'
 require 'verso/occupation_list'
@@ -31,4 +36,6 @@ require 'verso/standard'
 require 'verso/standards_list'
 require 'verso/task'
 require 'verso/task_list'
+
+# gem version
 require 'verso/version'
