@@ -7,7 +7,11 @@ module Verso
     def duty_areas
       @duty_areas ||= begin
                         method_missing(:duty_areas).
-                          collect { |da| DutyArea.new(da, self) }
+                          collect do |da|
+                            DutyArea.new(
+                              da.merge!(:code => code, :edition => edition)
+                            )
+                          end
                       rescue NoMethodError
                         []
                       end

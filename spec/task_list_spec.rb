@@ -22,11 +22,12 @@ describe Verso::TaskList do
       and_return(
         [Verso::DutyArea.new(
           {"title" => "DA Title",
+           "code" => "6320",
+           "edition" => "2012",
            "tasks" => [
              { "statement" => "one",
                "sensitive" => false,
-               "essential" => false }]},
-          @tl
+               "essential" => false }]}
         )]
       )
     @tl.has_optional_task?.should eq(true)
@@ -37,11 +38,12 @@ describe Verso::TaskList do
       and_return(
         [Verso::DutyArea.new(
           {"title" => "DA Title",
+           "code" => "6320",
+           "edition" => "2012",
            "tasks" => [
              { "statement" => "one",
                "sensitive" => false,
-               "essential" => true }]},
-          @tl
+               "essential" => true }]}
         )]
       )
     @tl.has_optional_task?.should eq(false)
@@ -52,11 +54,12 @@ describe Verso::TaskList do
       and_return(
         [Verso::DutyArea.new(
           {"title" => "DA Title",
+           "code" => "6320",
+           "edition" => "2012",
            "tasks" => [
              { "statement" => "one",
                "sensitive" => true,
-               "essential" => true }]},
-          @tl
+               "essential" => true }]}
         )]
       )
     @tl.has_sensitive_task?.should eq(true)
@@ -67,11 +70,12 @@ describe Verso::TaskList do
       and_return(
         [Verso::DutyArea.new(
           {"title" => "DA Title",
+           "code" => "6320",
+           "edition" => "2012",
            "tasks" => [
              { "statement" => "one",
                "sensitive" => false,
-               "essential" => true }]},
-          @tl
+               "essential" => true }]}
         )]
       )
     @tl.has_sensitive_task?.should eq(false)
