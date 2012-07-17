@@ -7,7 +7,7 @@ require 'ostruct'
 # base/mixin/override
 require 'verso/base'
 require 'verso/hash'
-require 'verso/http_get'
+require 'verso/http_gettable'
 
 # resources and children
 require 'verso/cluster'

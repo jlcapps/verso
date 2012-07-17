@@ -1,6 +1,6 @@
 module Verso
   class Occupation
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(raw_occupation)
       @raw_occupation = raw_occupation.symbolize_nested_keys!

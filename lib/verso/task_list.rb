@@ -1,7 +1,7 @@
 module Verso
   class TaskList
     include Enumerable
-    include HTTPGet
+    include HTTPGettable
 
     attr_accessor :code, :edition
 

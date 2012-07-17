@@ -1,7 +1,7 @@
 module Verso
   class CourseList
     include Enumerable
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(raw_query)
       @q_uri = Addressable::URI.new(

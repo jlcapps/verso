@@ -1,7 +1,7 @@
 module Verso
   class ProgramAreaList
     include Enumerable
-    include HTTPGet
+    include HTTPGettable
 
     def program_areas
       @program_areas ||= JSON.parse(

@@ -1,6 +1,6 @@
 module Verso
   class Extra
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(raw_extra)
       @raw_extra = raw_extra.symbolize_nested_keys!

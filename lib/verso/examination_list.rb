@@ -1,7 +1,7 @@
 module Verso
   class ExaminationList
     include Enumerable
-    include HTTPGet
+    include HTTPGettable
 
     attr_reader :examinations
 

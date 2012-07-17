@@ -2,7 +2,7 @@ module Verso
   class ExtrasList
     attr_reader :code, :edition
     include Enumerable
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(opts)
       @code, @edition = opts[:code], opts[:edition]

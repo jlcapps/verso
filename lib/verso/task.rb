@@ -1,6 +1,6 @@
 module Verso
   class Task
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(raw_task)
       @raw_task = raw_task.symbolize_nested_keys!

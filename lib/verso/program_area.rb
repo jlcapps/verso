@@ -1,6 +1,6 @@
 module Verso
   class ProgramArea
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(raw_category)
       @raw_program_area = raw_category.symbolize_nested_keys!

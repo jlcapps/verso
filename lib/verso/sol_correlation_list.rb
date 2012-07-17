@@ -1,7 +1,7 @@
 module Verso
   class SOLCorrelationList
     include Enumerable
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(context)
       @context = context

@@ -1,6 +1,6 @@
 module Verso
   class Credential
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(opts)
       @raw_credential = opts.symbolize_nested_keys!

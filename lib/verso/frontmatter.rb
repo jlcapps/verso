@@ -1,6 +1,6 @@
 module Verso
   class Frontmatter
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(opts)
       @raw_frontmatter = opts.symbolize_nested_keys!

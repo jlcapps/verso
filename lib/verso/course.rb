@@ -1,6 +1,6 @@
 module Verso
   class Course < Verso::Base
-    include HTTPGet
+    include HTTPGettable
     attr_reader :co_op, :code, :complement, :description, :duration,
       :edition, :grade_levels, :hours, :hs_credit_in_ms, :osha_exempt,
       :related_resources, :title

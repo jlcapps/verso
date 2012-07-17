@@ -1,6 +1,6 @@
 module Verso
   class Emphasis
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(raw_emphasis)
       @raw_emphasis = raw_emphasis.symbolize_nested_keys!

@@ -1,5 +1,5 @@
 module Verso
-  module HTTPGet
+  module HTTPGettable
     def method_missing(mname)
       unless attrs.has_key?(mname)
         attrs.merge!(fetch)

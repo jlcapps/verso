@@ -1,6 +1,6 @@
 module Verso
   class Cluster
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(opts)
       @raw_cluster = opts.symbolize_nested_keys!

@@ -1,7 +1,7 @@
 module Verso
   class ClusterList
     include Enumerable
-    include HTTPGet
+    include HTTPGettable
 
     def clusters
       @clusters ||= JSON.parse(http_get('/clusters/'))["clusters"].

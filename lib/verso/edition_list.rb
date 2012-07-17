@@ -1,7 +1,7 @@
 module Verso
   class EditionList
     include Enumerable
-    include HTTPGet
+    include HTTPGettable
 
     def editions
       @editions ||= JSON.parse(http_get('/editions/'))["editions"].

@@ -1,7 +1,7 @@
 module Verso
   class EmphasisList
     include Enumerable
-    include HTTPGet
+    include HTTPGettable
 
     def emphases
       @emphases ||= JSON.parse(http_get('/academics/'))["emphases"].

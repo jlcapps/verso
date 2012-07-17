@@ -1,6 +1,6 @@
 module Verso
   class Pathway
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(raw_pathway)
       @raw_pathway = raw_pathway.symbolize_nested_keys!

@@ -1,7 +1,7 @@
 module Verso
   class CorrelationList
     include Enumerable
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(context, name)
       @context = context

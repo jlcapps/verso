@@ -1,6 +1,6 @@
 module Verso
   class Standard
-    include HTTPGet
+    include HTTPGettable
 
     def initialize(raw_standard, context=nil)
       @raw_standard = raw_standard.symbolize_nested_keys!

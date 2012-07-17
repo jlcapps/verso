@@ -1,7 +1,7 @@
 module Verso
   class CredentialList
     include Enumerable
-    include HTTPGet
+    include HTTPGettable
 
     attr_reader :credentials
 
