@@ -1,19 +1,16 @@
 module Verso
-  class TaskList
+  class TaskList < Verso::Base
     include Enumerable
     include HTTPGettable
-
-    attr_accessor :code, :edition
-
-    def initialize(params)
-      @code = params[:code]
-      @edition = params[:edition]
-    end
+    attr_reader :code, :edition
 
     def duty_areas
-      @duty_areas ||= JSON.parse(
-        http_get("/courses/#{code},#{edition}/tasks/")
-      ).symbolize_nested_keys![:duty_areas].to_a
+      @duty_areas ||= begin
+                        method_missing(:duty_areas).
+                          collect { |da| DutyArea.new(da, self) }
+                      rescue NoMethodError
+                        []
+                      end
     end
 
     def has_optional_task?
@@ -25,7 +22,13 @@ module Verso
     end
 
     def each &block
-      duty_areas.each { |da| block.call(DutyArea.new(da, self)) }
+      duty_areas.each { |da| block.call(da) }
+    end
+
+  private
+
+    def path
+      "/courses/#{code},#{edition}/tasks/"
     end
   end
 end
