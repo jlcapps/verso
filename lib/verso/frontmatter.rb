@@ -1,19 +1,16 @@
 module Verso
-  class Frontmatter
+  class Frontmatter < Verso::Base
     include HTTPGettable
+    attr_reader :code, :edition
 
-    def initialize(opts)
-      @raw_frontmatter = opts.symbolize_nested_keys!
+  private
+
+    def fetch
+      super[:frontmatter]
     end
 
-    def method_missing(mname)
-      if !@raw_frontmatter.has_key?(mname)
-        @raw_frontmatter = JSON.parse(
-          http_get(
-            "/courses/#{@raw_frontmatter[:code]},#{@raw_frontmatter[:edition]}/frontmatter")
-        )["frontmatter"].symbolize_nested_keys!
-      end
-      @raw_frontmatter[mname]
+    def path
+      "/courses/#{code},#{edition}/frontmatter"
     end
   end
 end
