@@ -1,27 +1,10 @@
 module Verso
-  class Cluster
+  class Cluster < Verso::Base
     include HTTPGettable
-
-    def initialize(opts)
-      @raw_cluster = opts.symbolize_nested_keys!
-    end
-
-    def method_missing(mname)
-      if !@raw_cluster.has_key?(mname)
-        @raw_cluster.merge!(
-          JSON.parse(http_get("/clusters/#{id}"))["cluster"].
-            symbolize_nested_keys!
-        )
-      end
-      @raw_cluster[mname]
-    end
-
-    def id
-      @raw_cluster[:id]
-    end
+    attr_reader :code, :description, :id, :postsecondary_info, :title
 
     def title
-      @title ||= @raw_cluster[:title] || @raw_cluster[:cluster][:title]
+      @title ||= attrs[:title] || attrs[:cluster][:title]
     end
 
     def contact
@@ -41,6 +24,16 @@ module Verso
       @courses ||= CourseList.new(:cluster => slug.gsub('-', ' ')).
                      sort_by { |c| c.title + c.edition }.
                      uniq { |c| c.code + c.edition }
+    end
+
+  private
+
+    def fetch
+      super[:cluster]
+    end
+
+    def path
+      "/clusters/#{id}"
     end
   end
 end
