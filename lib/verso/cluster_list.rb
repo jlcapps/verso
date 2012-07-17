@@ -1,22 +1,15 @@
 module Verso
-  class ClusterList
+  class ClusterList < Verso::Base
     include Enumerable
     include HTTPGettable
-
-    def clusters
-      @clusters ||= JSON.parse(http_get)["clusters"].
-                      collect { |c| Cluster.new(c) }
-    end
-
-    def each &block
-      clusters.each &block
-    end
-
-    def last
-      clusters[-1]
-    end
+    extend Forwardable
+    def_delegators :clusters, :[], :each, :empty?, :last, :length
 
   private
+
+    def clusters
+      @clusters ||= method_missing(:clusters).collect { |c| Cluster.new(c) }
+    end
 
     def path
       "/clusters/"

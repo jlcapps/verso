@@ -1,5 +1,6 @@
 # external
 require 'addressable/uri'
+require 'forwardable'
 require 'json'
 require 'net/http'
 require 'ostruct'
