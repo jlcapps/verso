@@ -8,9 +8,8 @@ module Verso
 
     def method_missing(mname)
       if @raw_occupation[mname].nil?
-        @raw_occupation = JSON.parse(
-          http_get("/occupations/#{id}")
-        )["occupation"].symbolize_nested_keys!
+        @raw_occupation = JSON.parse(http_get)["occupation"].
+          symbolize_nested_keys!
       end
       @raw_occupation[mname]
     end
@@ -22,6 +21,12 @@ module Verso
 
     def pathway
       @pathway ||= Pathway.new(method_missing(:pathway))
+    end
+
+  private
+
+    def path
+      "/occupations/#{id}"
     end
   end
 end

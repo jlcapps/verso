@@ -1,12 +1,10 @@
 module Verso
-  class ExaminationList
+  class ExaminationList < Verso::Base
     include Enumerable
     include HTTPGettable
 
-    attr_reader :examinations
-
-    def initialize
-      @examinations = JSON.parse(http_get("/examinations/"))["examinations"].
+    def examinations
+      @examinations ||= method_missing(:examinations).
         collect { |e| OpenStruct.new(e) }
     end
 
@@ -16,6 +14,12 @@ module Verso
 
     def last
       examinations[-1]
+    end
+
+  private
+
+    def path
+      "/examinations/"
     end
   end
 end

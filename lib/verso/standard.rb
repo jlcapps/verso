@@ -9,9 +9,9 @@ module Verso
 
     def method_missing(mname)
       if !@raw_standard.has_key?(mname)
-        @raw_standard.merge!(JSON.parse(
-          http_get("/courses/#{code},#{edition}/standards/#{name}")
-        )["standard"].symbolize_nested_keys!)
+        @raw_standard.merge!(
+          JSON.parse(http_get)["standard"].symbolize_nested_keys!
+        )
       end
       @raw_standard[mname]
     end
@@ -32,6 +32,12 @@ module Verso
     def goals
       @goals ||= method_missing(:goals).
         collect { |raw_standard| OpenStruct.new(raw_standard) }
+    end
+
+  private
+
+    def path
+      "/courses/#{code},#{edition}/standards/#{name}"
     end
   end
 end

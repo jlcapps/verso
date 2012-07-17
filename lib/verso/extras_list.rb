@@ -1,22 +1,22 @@
 module Verso
-  class ExtrasList
-    attr_reader :code, :edition
+  class ExtrasList < Verso::Base
     include Enumerable
     include HTTPGettable
-
-    def initialize(opts)
-      @code, @edition = opts[:code], opts[:edition]
-    end
+    attr_reader :code, :edition
 
     def extras
-      @extras ||= JSON.parse(
-        http_get("/courses/#{code},#{edition}/extras/")
-      )["extras"].
+      @extras ||= method_missing(:extras).
         collect { |e| Extra.new(e.merge(:code => code, :edition => edition)) }
     end
 
     def each &block
       extras.each &block
+    end
+
+  private
+
+    def path
+      "/courses/#{code},#{edition}/extras/"
     end
   end
 end

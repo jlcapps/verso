@@ -1,11 +1,10 @@
 module Verso
-  class EmphasisList
+  class EmphasisList < Verso::Base
     include Enumerable
     include HTTPGettable
 
     def emphases
-      @emphases ||= JSON.parse(http_get('/academics/'))["emphases"].
-        collect { |em| Emphasis.new(em) }
+      @emphases ||= method_missing(:emphases).collect { |em| Emphasis.new(em) }
     end
 
     def each &block
@@ -14,6 +13,12 @@ module Verso
 
     def last
       emphases[-1]
+    end
+
+  private
+
+    def path
+      "/academics/"
     end
   end
 end

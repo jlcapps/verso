@@ -7,7 +7,7 @@ module Verso
     #
     # @param attrs [Hash]
     # @return [Verso::Base]
-    def initialize(attrs)
+    def initialize(attrs={})
       @attrs = attrs.symbolize_nested_keys!
     end
 

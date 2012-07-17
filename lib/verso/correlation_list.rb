@@ -29,9 +29,7 @@ module Verso
     end
 
     def correlations
-      @correlations ||= JSON.parse(
-        http_get("/courses/#{code},#{edition}/standards/#{@name}/correlations")
-      )["correlations"]
+      @correlations ||= JSON.parse(http_get)["correlations"]
     end
 
     def each &block
@@ -48,6 +46,12 @@ module Verso
           end
         end
       end
+    end
+
+  private
+
+    def path
+      "/courses/#{code},#{edition}/standards/#{@name}/correlations"
     end
   end
 end

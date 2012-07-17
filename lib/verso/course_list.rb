@@ -1,20 +1,11 @@
 module Verso
-  class CourseList
+  class CourseList < Verso::Base
     include Enumerable
     include HTTPGettable
 
-    def initialize(raw_query)
-      @q_uri = Addressable::URI.new(
-        :path => '/courses',
-        :query_values => raw_query.
-          select { |k, v| v }.
-          reject { |k, v| v.to_s.empty? }
-      )
-    end
-
     def courses
-      @courses ||= if @q_uri.query_values.values.any?
-                     JSON.parse(http_get(@q_uri.request_uri))["courses"].
+      @courses ||= if q_uri.query_values.values.any?
+                     JSON.parse(http_get)["courses"].
                        collect { |c| Course.new(c) }
                    else
                      []
@@ -31,6 +22,21 @@ module Verso
 
     def empty?
       courses.empty?
+    end
+
+  private
+
+    def q_uri
+      Addressable::URI.new(
+        :path => '/courses',
+        :query_values => attrs.
+          select { |k, v| v }.
+          reject { |k, v| v.to_s.empty? }
+      )
+    end
+
+    def path
+      q_uri.request_uri
     end
   end
 end

@@ -17,8 +17,8 @@ describe Verso::ExtrasList do
 
   it "responds as Enumerable" do
     Verso::Extra.should_receive(:new).
-      with("title" => "Instructional Scenarios",
-           "name" => "untitled~6320", :code => "6320", :edition => "2011",
+      with(:title => "Instructional Scenarios",
+           :name => "untitled~6320", :code => "6320", :edition => "2011",
            ).
       and_return(@extra)
     @extras_list.first.title.should eq("Instructional Scenarios")

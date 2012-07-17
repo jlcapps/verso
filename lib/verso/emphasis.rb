@@ -1,22 +1,21 @@
 module Verso
-  class Emphasis
+  class Emphasis < Verso::Base
     include HTTPGettable
-
-    def initialize(raw_emphasis)
-      @raw_emphasis = raw_emphasis.symbolize_nested_keys!
-    end
-
-    def method_missing(mname)
-      if !@raw_emphasis.has_key?(mname)
-        @raw_emphasis = JSON.parse(http_get("/academics/#{id}"))["emphasis"].
-          symbolize_nested_keys!
-      end
-      @raw_emphasis[mname]
-    end
+    attr_reader :id, :title
 
     def occupation_data
       @occupation_data ||= method_missing(:occupation_data).
         collect { |od| OccupationData.new(od) }
+    end
+
+  private
+
+    def fetch
+      super[:emphasis]
+    end
+
+    def path
+      "/academics/#{id}"
     end
   end
 end

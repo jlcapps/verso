@@ -1,7 +1,6 @@
 module Verso
   class SOLCorrelationList
     include Enumerable
-    include HTTPGettable
 
     def initialize(context)
       @context = context
@@ -26,7 +25,11 @@ module Verso
     def correlations
       @correlations ||= sol_names.collect do |name|
         JSON.parse(
-          http_get("/courses/#{code},#{edition}/standards/#{name}/correlations")
+          Net::HTTP.get(
+            "api.cteresource.org",
+            "/courses/#{code},#{edition}/standards/#{name}/correlations",
+            80
+          )
         )["correlations"]
       end.flatten
     end

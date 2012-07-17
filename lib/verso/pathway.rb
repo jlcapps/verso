@@ -8,8 +8,7 @@ module Verso
 
     def method_missing(mname)
       if @raw_pathway[mname].nil?
-        @raw_pathway = JSON.parse(http_get("/pathways/#{id}"))["pathway"].
-          symbolize_nested_keys!
+        @raw_pathway = JSON.parse(http_get)["pathway"].symbolize_nested_keys!
       end
       @raw_pathway[mname]
     end
@@ -21,6 +20,12 @@ module Verso
 
     def cluster
       @cluster ||= Cluster.new(method_missing(:cluster))
+    end
+
+  private
+
+    def path
+      "/pathways/#{id}"
     end
   end
 end

@@ -1,14 +1,17 @@
 module Verso
-  class CredentialList
+  class CredentialList < Verso::Base
     include Enumerable
     include HTTPGettable
+    attr_reader :text
 
-    attr_reader :credentials
+    def initialize(attrs={})
+      attrs.symbolize_nested_keys!
+      attrs[:text] = attrs[:text].to_s
+      super attrs
+    end
 
-    def initialize(opts={})
-      @q_uri = Addressable::URI.new(:path => '/credentials')
-      @q_uri.query_values = opts unless opts[:text].to_s.empty?
-      @credentials = JSON.parse(http_get(@q_uri.request_uri))["credentials"].
+    def credentials
+      @credentials ||= method_missing(:credentials).
         collect { |c| Credential.new(c) }.
         sort_by { |c| c.title }
     end
@@ -23,6 +26,14 @@ module Verso
 
     def empty?
       credentials.empty?
+    end
+
+  private
+
+    def path
+      q_uri ||= Addressable::URI.new(:path => '/credentials')
+      q_uri.query_values = { :text => text} unless text.empty?
+      q_uri.request_uri
     end
   end
 end

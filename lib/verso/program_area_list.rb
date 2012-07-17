@@ -4,9 +4,8 @@ module Verso
     include HTTPGettable
 
     def program_areas
-      @program_areas ||= JSON.parse(
-        http_get('/program_areas/')
-      )["program_areas"].collect { |pa| ProgramArea.new(pa) }
+      @program_areas ||= JSON.parse(http_get)["program_areas"].
+        collect { |pa| ProgramArea.new(pa) }
     end
 
     def each &block
@@ -15,6 +14,12 @@ module Verso
 
     def last
       program_areas[-1]
+    end
+
+  private
+
+    def path
+      "/program_areas/"
     end
   end
 end

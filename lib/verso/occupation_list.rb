@@ -1,18 +1,10 @@
 module Verso
-  class OccupationList
+  class OccupationList < Verso::Base
     include Enumerable
     include HTTPGettable
 
-    def initialize(raw_query={})
-      @q_uri = Addressable::URI.new(
-        :path => '/occupations',
-        :query_values => raw_query
-      )
-    end
-
     def occupations
-      @occupations ||= JSON.
-        parse(http_get(@q_uri.request_uri))["occupation_data"].
+      @occupations ||= method_missing(:occupation_data).
           collect { |o| OccupationData.new(o) }.
           sort_by { |o| [o.cluster.title, o.pathway.title] }
     end
@@ -27,6 +19,13 @@ module Verso
 
     def empty?
       occupations.empty?
+    end
+
+  private
+
+    def path
+      Addressable::URI.new(:path => '/occupations',
+                           :query_values => attrs).request_uri
     end
   end
 end

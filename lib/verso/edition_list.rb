@@ -1,10 +1,10 @@
 module Verso
-  class EditionList
+  class EditionList < Verso::Base
     include Enumerable
     include HTTPGettable
 
     def editions
-      @editions ||= JSON.parse(http_get('/editions/'))["editions"].
+      @editions ||= method_missing(:editions).
                       collect { |e| OpenStruct.new(e) }
     end
 
@@ -14,6 +14,12 @@ module Verso
 
     def last
       editions[-1]
+    end
+
+  private
+
+    def path
+      "/editions/"
     end
   end
 end

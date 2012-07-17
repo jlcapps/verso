@@ -4,7 +4,7 @@ module Verso
     include HTTPGettable
 
     def clusters
-      @clusters ||= JSON.parse(http_get('/clusters/'))["clusters"].
+      @clusters ||= JSON.parse(http_get)["clusters"].
                       collect { |c| Cluster.new(c) }
     end
 
@@ -14,6 +14,12 @@ module Verso
 
     def last
       clusters[-1]
+    end
+
+  private
+
+    def path
+      "/clusters/"
     end
   end
 end

@@ -9,12 +9,12 @@ module Verso
 
   protected
 
-    def http_get(path)
+    def http_get
       Net::HTTP.get('api.cteresource.org', path, 80)
     end
 
     def fetch
-      JSON.parse(http_get(path)).symbolize_nested_keys!
+      JSON.parse(http_get).symbolize_nested_keys!
     end
   end
 end
