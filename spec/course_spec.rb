@@ -1,193 +1,387 @@
 require 'spec_helper'
 
 describe Verso::Course do
+  use_vcr_cassette :record => :new_episodes
+
   before do
-    credentials = [{
-      "title" => "Certification 1", "type" => "Certification"
-    },
-      {"title" => "License 1", "type" => "License" }]
-    prerequisite_courses = [{
-      "code" => "2222", "hours" => nil, "duration" => 36,
-      "title" => "Basketweaving", "co_op" => true
-    }]
-    occupation_data = [{
-      "cluster" => { "title" => "Information Technology" },
-      "pathway" => { "title" => "Information and Support Services" },
-      "occupations" => [{ "title" => "Database Analyst" }]
-    }]
-    @extra = double("ExtrasList", :title => "Extra Title",
-                    :name => "extra_name")
-    @course = Verso::Course.new("code" => "6321", "duration" => 36,
-                         "title" => "Accounting, Advanced",
-                         "hours" => nil, "edition" => "2011",
-                         "co_op" => true,
-                         "related_resources" => ["extras", "standards"],
-                         "grade_levels" => "8 9 10",
-                         "credentials" => credentials,
-                         "occupation_data" => occupation_data,
-                         "related_courses" => prerequisite_courses,
-                         "prerequisite_courses" => prerequisite_courses)
+    @course = Verso::Course.new(:code => "6321",
+                                :edition => Verso::EditionList.new.last.year)
   end
 
-  it "responds to #extras" do
-    Verso::ExtrasList.should_receive(:new).and_return([@extra])
-    @course.extras.first.title.should eq("Extra Title")
-  end
-
-  it "responds to #related_courses" do
-    @course.related_courses.first.code.should eq('2222')
-  end
-
-  it "responds to #is_ms?" do
-    @course.is_ms?.should eq(true)
-  end
-
-  it "responds to #is_hs?" do
-    @course.is_hs?.should eq(true)
-  end
-
-  it "responds to #code" do
-    @course.code.should eq("6321")
-  end
-
-  it "responds to #duration" do
-    @course.duration.should eq(36)
-  end
-
-  it "responds to #title" do
-    @course.title.strip.should eq("Accounting, Advanced")
-  end
-
-  it "responds to #edition" do
-    @course.edition.should eq("2011")
-  end
-
-  it "responds to #hours" do
-    dental = Verso::Course.new("hours" => 280)
-    dental.hours.should eq(280)
-  end
-
-  it "responds to #co_op" do
-    @course.co_op.should eq(true)
-    Verso::Course.new("co_op" => false).co_op.should eq(false)
-  end
-
-  it "responds to #duty_areas" do
-    @task = double("Task", :statement => "a task", :id => "999999",
-                    :sensitive => false, :essential => true)
-    @duty_area = double("DutyArea", :title => "A Duty Area",
-                        :tasks => [@task])
-    Verso::TaskList.should_receive(:new).
-      with(:code => "6321", :edition => "2011").
-      and_return([@duty_area])
-    @course.duty_areas.first.should eq(@duty_area)
-  end
-
-  it "responds to #occupation_data" do
-    @occupation = double("Occupation", :title => "Database Analyst")
-    @pathway = double("Pathway", :title => "Information Support and Services")
-    @cluster = double("Cluster", :title => "Information Technology")
-    @occlist = double("OccupationData",
-                      :cluster => @cluster,
-                      :occupations => [@occupation],
-                      :pathway => @pathway)
-    Verso::OccupationData.should_receive(:new).and_return(@occlist)
-    @course.occupation_data.first.should eq(@occlist)
-  end
-
-  it "responds to prerequisites" do
-    @course.prerequisites.first.code.should eq('2222')
-  end
-
-  it "responds to credentials" do
-    @course.credentials.first.title.should eq("Certification 1")
-    @course.credentials.last.title.should eq("License 1")
-  end
-
-  it "responds to certifications" do
-    @course.certifications.first.title.should eq("Certification 1")
-    @course.certifications.count.should eq(1)
-  end
-
-  it "responds to licenses" do
-    @course.licenses.first.title.should eq("License 1")
-    @course.licenses.count.should eq(1)
-  end
-
-  it "responds to #standards" do
-    Verso::StandardsList.
-      should_receive(:from_course).
-      with(@course).
-      and_return(["phony"])
-    @course.stub(:get_attr).and_return(["standards"])
-    @course.standards.first.should eq("phony")
-  end
-
-  it "responds to #task" do
-    t = Verso::Task.new("code" => @course.code, "edition" => @course.edition,
-                        "id" => 99999999)
-    Verso::Task.should_receive(:new).
-      with("code" => @course.code,
-           "edition" => @course.edition,
-           "id" => 99999999).
-      and_return(t)
-    t = @course.task(99999999)
-    t.code.should eq(@course.code)
-  end
-
-  it "responds to #frontmatter" do
-    Verso::Frontmatter.should_receive(:new).
-      with("code" => @course.code,
-           "edition" => @course.edition).
-      and_return("phony")
-    @course.stub(:related_resources).and_return(["frontmatter"])
-    @course.frontmatter.should eq("phony")
-  end
-
-  it "#frontmatter returns nil if there is no frontmatter" do
-    @course.stub(:related_resources).and_return([])
-    @course.frontmatter.should eq(nil)
-  end
-
-  context "Only code and edition specified" do
-    use_vcr_cassette :record => :new_episodes
-
-    before do
-      @course = Verso::Course.new("code" => 6320, "edition" => "2011")
+  describe '#certifications' do
+    it 'responds' do
+      @course.should respond_to(:certifications)
     end
 
-    it "responds to #title" do
-      @course.title.should eq("Accounting")
+    it 'is an Array' do
+      @course.certifications.should be_a(Array)
+    end
+
+    it 'is an Array of Verso::Credential objects' do
+      @course.certifications.first.should be_a(Verso::Credential)
+    end
+
+    it "is an Array of Verso::Credential objects with type 'Certification'" do
+      @course.certifications.first.type.should == 'Certification'
     end
   end
 
-  context "MS-only course" do
-    before do
-      @course = Verso::Course.new("code" => "6320", "edition" => "2011",
-                           "grade_levels" => "8")
+  describe '#co_op' do
+    it 'responds' do
+      @course.should respond_to(:co_op)
     end
 
-    it 'knows it is ms' do
-      @course.is_ms?.should eq(true)
-    end
-
-    it 'knows it is not hs' do
-      @course.is_hs?.should eq(false)
+    it 'is Boolean' do
+      @course.co_op.should be_true
     end
   end
 
-  context 'HS-only course' do
-    before do
-      @course = Verso::Course.new("code" => "6320", "edition" => "2011",
-                           "grade_levels" => "10")
+  describe '#co_op?' do
+    it 'responds' do
+      @course.should respond_to(:co_op?)
     end
 
-    it 'knows it is not ms' do
-      @course.is_ms?.should eq(false)
+    it 'is Boolean' do
+      @course.should be_co_op
+    end
+  end
+
+  describe '#complement' do
+    it 'responds' do
+      @course.should respond_to(:complement)
     end
 
-    it 'knows it is hs' do
-      @course.is_hs?.should eq(true)
+    it 'is Boolean' do
+      @course.complement.should be_false
+    end
+  end
+
+  describe '#complement?' do
+    it 'responds' do
+      @course.should respond_to(:complement?)
+    end
+
+    it 'is Boolean' do
+      @course.should_not be_complement
+    end
+  end
+
+  describe '#code' do
+    it 'responds' do
+      @course.should respond_to(:code)
+    end
+
+    it 'is a String' do
+      @course.code.should be_a(String)
+    end
+
+    it 'looks like a course code' do
+      @course.code.should match(/\d{4}/)
+    end
+  end
+
+  describe '#credentials' do
+    it 'responds' do
+      @course.should respond_to(:credentials)
+    end
+
+    it 'is an Array' do
+      @course.credentials.should be_a(Array)
+    end
+
+    it 'is an Array of Verso::Credential objects' do
+      @course.credentials.first.should be_a(Verso::Credential)
+    end
+  end
+
+  describe '#description' do
+    it 'responds' do
+      @course.should respond_to(:description)
+    end
+
+    it 'is a String' do
+      @course.description.should be_a(String)
+    end
+
+    it 'looks like HTML' do
+      @course.description.should match(/<\/.+>/)
+    end
+  end
+
+  describe '#duration' do
+    it 'responds' do
+      @course.should respond_to(:duration)
+    end
+
+    it 'is a Fixnum' do
+      @course.duration.should be_a(Fixnum)
+    end
+  end
+
+  describe '#duty_areas' do
+    it 'responds' do
+      @course.should respond_to(:duty_areas)
+    end
+
+    it 'is a Verso::TaskList' do
+      @course.duty_areas.should be_a(Verso::TaskList)
+    end
+  end
+
+  describe '#extras' do
+    it 'responds' do
+      @course.should respond_to(:extras)
+    end
+
+    it 'is a Verso::ExtrasList' do
+      @course.extras.should be_a(Verso::ExtrasList)
+    end
+  end
+
+  describe '#frontmatter' do
+    it 'responds' do
+      @course.should respond_to(:frontmatter)
+    end
+
+    it 'is a Verso::Frontmatter object' do
+      @course.frontmatter.should be_a(Verso::Frontmatter)
+    end
+  end
+
+  describe '#grade_levels' do
+    it 'responds' do
+      @course.should respond_to(:grade_levels)
+    end
+
+    it 'is a String' do
+      @course.grade_levels.should be_a(String)
+    end
+
+    it 'looks like grade levels' do
+      @course.grade_levels.should match(/\d{1,2} \d/)
+    end
+  end
+
+  describe '#hours' do
+    it 'responds' do
+      @course.should respond_to(:hours)
+    end
+
+    it 'is Fixnum or nil' do
+      @course.hours.should  == nil
+      dental = Verso::Course.new(:code => "8328",
+                                 :edition => Verso::EditionList.new.last.year)
+      dental.hours.should be_a(Fixnum)
+    end
+  end
+
+  describe '#hs_credit_in_ms' do
+    it 'responds' do
+      @course.should respond_to(:hs_credit_in_ms)
+    end
+
+    it 'is Boolean' do
+      @course.hs_credit_in_ms.should be_false
+    end
+  end
+
+  describe '#hs_credit_in_ms?' do
+    it 'responds' do
+      @course.should respond_to(:hs_credit_in_ms?)
+    end
+
+    it 'is Boolean' do
+      @course.should_not be_hs_credit_in_ms
+    end
+  end
+
+  describe '#is_ms?' do
+    it 'responds' do
+      @course.should respond_to(:is_ms?)
+    end
+
+    it 'is Boolean' do
+      @course.is_ms?.should be_false
+    end
+
+    it 'is not middle school' do
+      @course.should_not be_is_ms
+    end
+  end
+
+  describe '#is_hs?' do
+    it 'responds' do
+      @course.should respond_to(:is_hs?)
+    end
+
+    it 'is Boolean' do
+      @course.is_hs?.should be_true
+    end
+
+    it 'is high school' do
+      @course.should be_is_hs
+    end
+  end
+
+  describe '#licenses' do
+    before(:each) do
+      @barber = Verso::Course.new(:code => "8740",
+                                  :edition => Verso::EditionList.new.last.year)
+    end
+
+    it 'responds' do
+      @barber.should respond_to(:licenses)
+    end
+
+    it 'is an Array' do
+      @barber.licenses.should be_a(Array)
+    end
+
+    it 'is an Array of Verso::Credential objects' do
+      @barber.licenses.first.should be_a(Verso::Credential)
+    end
+
+    it "is an Array of Verso::Credential objects with type 'License'" do
+      @barber.licenses.first.type.should == 'License'
+    end
+  end
+
+  describe '#occupation_data' do
+    it 'responds' do
+      @course.should respond_to(:occupation_data)
+    end
+
+    it 'is an Array' do
+      @course.occupation_data.should be_a(Array)
+    end
+
+    it 'is an Array of Verso::OccupationData objects' do
+      @course.occupation_data.first.should be_a(Verso::OccupationData)
+    end
+  end
+
+  describe '#osha_exempt' do
+    it 'responds' do
+      @course.should respond_to(:osha_exempt)
+    end
+
+    it 'is Boolean' do
+      @course.osha_exempt.should be_false
+    end
+  end
+
+  describe '#osha_exempt?' do
+    it 'responds' do
+      @course.should respond_to(:osha_exempt?)
+    end
+
+    it 'is Boolean' do
+      @course.osha_exempt?.should be_false
+    end
+  end
+
+  describe '#prerequisite_courses' do
+    it 'responds' do
+      @course.should respond_to(:prerequisite_courses)
+    end
+
+    it 'is an Array' do
+      @course.prerequisite_courses.should be_a(Array)
+    end
+
+    it 'is an Array of Verso::Course objects' do
+      @course.prerequisite_courses.first.should be_a(Verso::Course)
+    end
+  end
+
+  describe '#prerequisites' do
+    it 'responds' do
+      @course.should respond_to(:prerequisites)
+    end
+
+    it 'is an Array' do
+      @course.prerequisites.should be_a(Array)
+    end
+
+    it 'is an Array of Verso::Course objects' do
+      @course.prerequisites.first.should be_a(Verso::Course)
+    end
+  end
+
+  describe '#related_courses' do
+    it 'responds' do
+      @course.should respond_to(:related_courses)
+    end
+
+    it 'is an Array' do
+      @course.related_courses.should be_a(Array)
+    end
+
+    it 'is an Array of Verso::Course objects' do
+      @course.related_courses.first.should be_a(Verso::Course)
+    end
+  end
+
+  describe '#related_resources' do
+    it 'responds' do
+      @course.should respond_to(:related_resources)
+    end
+
+    it 'is an Array' do
+      @course.related_resources.should be_a(Array)
+    end
+
+    it 'is an Array of Strings' do
+      @course.related_resources.first.should be_a(String)
+    end
+
+    it "includes 'tasks'" do
+      @course.related_resources.should include('tasks')
+    end
+  end
+
+  describe '#standards' do
+    it 'responds' do
+      @course.should respond_to(:standards)
+    end
+
+    it 'is a Verso::StandardsList' do
+      @course.standards.should be_a(Verso::StandardsList)
+    end
+  end
+
+  describe '#task' do
+    it 'responds' do
+      @course.should respond_to(:task)
+    end
+
+    it 'returns a Verso::Task object' do
+      task_id = @course.duty_areas.to_a.last.tasks.first.id
+      @course.task(task_id).should be_a(Verso::Task)
+    end
+  end
+
+  describe '#tasklist' do
+    it 'responds' do
+      @course.should respond_to(:tasklist)
+    end
+
+    it 'is a Verso::TaskList' do
+      @course.tasklist.should be_a(Verso::TaskList)
+    end
+  end
+
+  describe '#title' do
+    it 'responds' do
+      @course.should respond_to(:title)
+    end
+
+    it 'is a String' do
+      @course.title.should be_a(String)
+    end
+
+    it 'is about Accounting' do
+      @course.title.should match(/Accounting/)
     end
   end
 end
