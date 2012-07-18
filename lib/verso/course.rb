@@ -26,6 +26,7 @@ module Verso
     def duty_areas
       @duty_areas ||= TaskList.new(:code => code, :edition => edition)
     end
+    alias tasklist duty_areas
 
     def occupation_data
       @occupation_data ||= get_attr(:occupation_data).
