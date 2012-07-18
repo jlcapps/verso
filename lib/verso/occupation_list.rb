@@ -4,7 +4,7 @@ module Verso
     include HTTPGettable
 
     def occupations
-      @occupations ||= method_missing(:occupation_data).
+      @occupations ||= get_attr(:occupation_data).
           collect { |o| OccupationData.new(o) }.
           sort_by { |o| [o.cluster.title, o.pathway.title] }
     end

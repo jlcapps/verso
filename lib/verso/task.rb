@@ -5,19 +5,23 @@ module Verso
       :questions
     alias sensitive? sensitive
 
-    def essential
-      sensitive ? true : method_missing(:essential)
-    end
-    alias essential? essential
-
-    def standards
-      @standards ||= StandardsList.new(method_missing(:goals))
-    end
-    alias goals standards
-
     def bare?
       definition.empty? && standards.sols.empty?
     end
+
+    def essential
+      sensitive ? true : get_attr(:essential)
+    end
+    alias essential? essential
+
+    def number
+      attrs[:number]
+    end
+
+    def standards
+      @standards ||= StandardsList.new(get_attr(:goals))
+    end
+    alias goals standards
 
   private
 

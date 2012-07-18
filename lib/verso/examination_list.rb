@@ -4,7 +4,7 @@ module Verso
     include HTTPGettable
 
     def examinations
-      @examinations ||= method_missing(:examinations).
+      @examinations ||= get_attr(:examinations).
         collect { |e| OpenStruct.new(e) }
     end
 

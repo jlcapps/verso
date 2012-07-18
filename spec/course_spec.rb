@@ -119,7 +119,7 @@ describe Verso::Course do
       should_receive(:from_course).
       with(@course).
       and_return(["phony"])
-    @course.stub(:method_missing).and_return(["standards"])
+    @course.stub(:get_attr).and_return(["standards"])
     @course.standards.first.should eq("phony")
   end
 

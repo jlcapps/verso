@@ -1,29 +1,22 @@
 module Verso
-  class Occupation
+  class Occupation < Verso::Base
     include HTTPGettable
-
-    def initialize(raw_occupation)
-      @raw_occupation = raw_occupation.symbolize_nested_keys!
-    end
-
-    def method_missing(mname)
-      if @raw_occupation[mname].nil?
-        @raw_occupation = JSON.parse(http_get)["occupation"].
-          symbolize_nested_keys!
-      end
-      @raw_occupation[mname]
-    end
+    attr_reader :description, :id, :title
 
     def related_courses
-      @related_courses ||= method_missing(:related_courses).
-        collect { |c| Course.new(c) }
+      @related_courses ||= get_attr(:related_courses).
+                             collect { |c| Course.new(c) }
     end
 
     def pathway
-      @pathway ||= Pathway.new(method_missing(:pathway))
+      @pathway ||= Pathway.new(get_attr(:pathway))
     end
 
   private
+
+    def fetch
+      super[:occupation]
+    end
 
     def path
       "/occupations/#{id}"

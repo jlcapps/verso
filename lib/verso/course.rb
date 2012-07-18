@@ -28,24 +28,23 @@ module Verso
     end
 
     def occupation_data
-      @occupation_data ||= method_missing(:occupation_data).
+      @occupation_data ||= get_attr(:occupation_data).
         collect { |od| OccupationData.new(od) }
     end
 
     def prerequisite_courses
-      @prerequisites ||= method_missing(:prerequisite_courses).
-        collect { |c| Course.new(c) }
+      @prerequisites ||= get_attr(:prerequisite_courses).
+                           collect { |c| Course.new(c) }
     end
     alias prerequisites prerequisite_courses
 
     def related_courses
-      @related_courses ||= method_missing(:related_courses).
+      @related_courses ||= get_attr(:related_courses).
                              collect { |c| Course.new(c) }
     end
 
     def credentials
-      @credentials ||= method_missing(:credentials).
-                         collect { |c| Credential.new(c) }
+      @credentials ||= get_attr(:credentials).collect { |c| Credential.new(c) }
     end
 
     def certifications

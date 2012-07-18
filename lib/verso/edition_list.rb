@@ -4,7 +4,7 @@ module Verso
     include HTTPGettable
 
     def editions
-      @editions ||= method_missing(:editions).
+      @editions ||= get_attr(:editions).
                       collect { |e| OpenStruct.new(e) }
     end
 

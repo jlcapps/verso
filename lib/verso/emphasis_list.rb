@@ -4,7 +4,7 @@ module Verso
     include HTTPGettable
 
     def emphases
-      @emphases ||= method_missing(:emphases).collect { |em| Emphasis.new(em) }
+      @emphases ||= get_attr(:emphases).collect { |em| Emphasis.new(em) }
     end
 
     def each &block

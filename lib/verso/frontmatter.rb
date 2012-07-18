@@ -1,7 +1,7 @@
 module Verso
   class Frontmatter < Verso::Base
     include HTTPGettable
-    attr_reader :code, :edition
+    attr_reader :code, :edition, :notice_block
 
   private
 

@@ -3,7 +3,9 @@ require 'spec_helper'
 describe Verso::Task do
   context "when you are fetching full task" do
     before do
-      @task = Verso::Task.new("code" => "6320", "edition" => "2011", "id" => "1")
+      @task = Verso::Task.new("code" => "6320",
+                              "edition" => "2011",
+                              "id" => "1")
     end
 
     it "fetches the full task" do
@@ -14,7 +16,7 @@ describe Verso::Task do
     end
 
     it "responds to standards" do
-      @task.should_receive(:method_missing).with(:goals).and_return({})
+      @task.should_receive(:get_attr).with(:goals).and_return({})
       Verso::StandardsList.should_receive(:new)
       @task.standards
     end

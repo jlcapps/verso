@@ -8,7 +8,7 @@ module Verso
     end
 
     def contact
-      @contact ||= OpenStruct.new(method_missing(:contact))
+      @contact ||= OpenStruct.new(get_attr(:contact))
     end
 
     def slug
@@ -16,7 +16,7 @@ module Verso
     end
 
     def pathways
-      @pathways ||= method_missing(:pathways).
+      @pathways ||= get_attr(:pathways).
         collect { |p| Pathway.new(p) }
     end
 

@@ -1,21 +1,7 @@
 module Verso
-  class ProgramArea
+  class ProgramArea < Verso::Base
     include HTTPGettable
-
-    def initialize(raw_category)
-      @raw_program_area = raw_category.symbolize_nested_keys!
-    end
-
-    def method_missing(mname)
-      if @raw_program_area[mname].nil?
-        @raw_program_area.merge!(
-          JSON.parse(http_get("/program_areas/"))["program_areas"].
-                       find { |c| c["title"] == @raw_program_area[:title] }.
-                       symbolize_nested_keys!
-          )
-      end
-      @raw_program_area[mname]
-    end
+    attr_reader :deprecated, :official, :section_overview, :title, :version_date
 
     def description
       ""
@@ -29,12 +15,22 @@ module Verso
 
     def slug
       # swiped from ActiveSupport::Inflector
-      parameterized_string = @raw_program_area[:title].dup
+      parameterized_string = title.dup
       parameterized_string.gsub!(/[^a-z0-9\-_]+/i, '-')
       re_sep = Regexp.escape('-')
       parameterized_string.gsub!(/#{re_sep}{2,}/, '-')
       parameterized_string.gsub!(/^#{re_sep}|#{re_sep}$/i, '')
       parameterized_string.downcase
+    end
+
+  private
+
+    def path
+      "/program_areas/"
+    end
+
+    def fetch
+      super[:program_areas].find { |pa| pa[:title] == title }
     end
   end
 end

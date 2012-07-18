@@ -5,7 +5,7 @@ module Verso
     attr_reader :code, :edition
 
     def extras
-      @extras ||= method_missing(:extras).
+      @extras ||= get_attr(:extras).
         collect { |e| Extra.new(e.merge(:code => code, :edition => edition)) }
     end
 

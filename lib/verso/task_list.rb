@@ -6,7 +6,7 @@ module Verso
 
     def duty_areas
       @duty_areas ||= begin
-                        method_missing(:duty_areas).
+                        get_attr(:duty_areas).
                           collect do |da|
                             DutyArea.new(
                               da.merge!(:code => code, :edition => edition)

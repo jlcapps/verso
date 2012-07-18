@@ -1,13 +1,11 @@
 module Verso
   module HTTPGettable
-    def method_missing(mname)
-      unless attrs.has_key?(mname)
-        attrs.merge!(fetch)
-      end
-      attrs.has_key?(mname) ? attrs[mname] : super
-    end
-
   protected
+
+    def get_attr(attr)
+      attrs.merge!(fetch) unless attrs.has_key?(attr)
+      super attr
+    end
 
     def http_get
       Net::HTTP.get('api.cteresource.org', path, 80)

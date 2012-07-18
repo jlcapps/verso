@@ -4,7 +4,7 @@ module Verso
     attr_reader :id, :title
 
     def occupation_data
-      @occupation_data ||= method_missing(:occupation_data).
+      @occupation_data ||= get_attr(:occupation_data).
         collect { |od| OccupationData.new(od) }
     end
 

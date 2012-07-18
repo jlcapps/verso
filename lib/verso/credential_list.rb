@@ -11,7 +11,7 @@ module Verso
     end
 
     def credentials
-      @credentials ||= method_missing(:credentials).
+      @credentials ||= get_attr(:credentials).
         collect { |c| Credential.new(c) }.
         sort_by { |c| c.title }
     end
