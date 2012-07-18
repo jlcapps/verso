@@ -4,9 +4,9 @@
 #
 # @see http://api.cteresource.org/docs Web API documentation
 module Verso
-  # Classes derived from Verso::Base should define attr_readers or
-  # appropriate methods (using Verso::Base#get_attr w/in methods) to access
-  # attributes stored in the attrs hash.
+  # @abstract Classes derived from Verso::Base should define attr_readers or
+  #   appropriate methods (using Verso::Base#get_attr w/in methods) to access
+  #   attributes stored in the attrs hash.
   #
   # @!attribute [r] attrs
   #   attribute hash
@@ -24,7 +24,7 @@ module Verso
 
     # Define methods to retrieve values from attribute hash
     #
-    # @param attr [Symbol]
+    # @param attrs [Symbol]
     def self.attr_reader(*attrs)
       attrs.each do |attr|
         class_eval do
