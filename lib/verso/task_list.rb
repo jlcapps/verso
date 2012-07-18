@@ -12,7 +12,7 @@ module Verso
                               da.merge!(:code => code, :edition => edition)
                             )
                           end
-                      rescue NoMethodError
+                      rescue NameError
                         []
                       end
     end
