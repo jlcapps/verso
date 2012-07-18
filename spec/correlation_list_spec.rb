@@ -1,55 +1,113 @@
 require 'spec_helper'
 
 describe Verso::CorrelationList do
-  before do
-    @goal = OpenStruct.new({ "title" => "goal title",
-                             "description" => "goal description" })
-    @standard = double("Standard", :title => "standard title",
-                       :name => "standard_name",
-                       :description => "standard description",
-                       :goals => [@goal], :sections => [])
-    @standards_list = [@standard]
-    @standards_list.stub(:non_sols).
-      and_return([OpenStruct.new(:name => "standard_name"),
-                  OpenStruct.new(:name => "science")])
-    @task = double("Task", :statement => "task statement", :id => "111",
-                   :standards => @standards_list)
-    @tasks = [@task]
-    @duty_areas = [OpenStruct.new(:tasks => @tasks)]
-    @course = double("Course", :title => "course title", :edition => "1929",
-                     :code => "0000", :duration => 36, :hours => nil,
-                     :co_op => true, :related_resources => ["tasks"],
-                     :standards => @standards_list,
-                     :duty_areas => @duty_areas, :certifications => [])
-    correlations1 = { "correlations" => [
-      {"id" => "111", "statement" => "task statement",
-       "goals" => {
-         "standard_name" => { "title" => "English", "description" => "",
-                              "sections" => [],
-                              "goals" => [
-                                { "title" => "english goal title",
-                                  "description" => "english goal description" }
-                        ] }
-       }
-      }
-    ]}.to_json
-    @correlations = Verso::CorrelationList.new(@course, "standard_name")
-    Net::HTTP.stub(:get).and_return(correlations1)
+  use_vcr_cassette :record => :new_episodes
+
+  before(:each) do
+    @list = Verso::CorrelationList.new(
+      :code => "6320",
+      :edition => Verso::EditionList.new.last.year,
+      :name => "english"
+    )
   end
 
-  it 'is enumerable' do
-    @correlations.first.statement.should eq('task statement')
+  describe '#code' do
+    it { @list.code.should == '6320' }
   end
 
-  it 'numbers the correlations' do
-    @correlations.first.number.should eq(1)
+  describe '#edition' do
+    it { @list.edition.should match(/2\d{3}/) }
   end
 
-  it 'has a goal' do
-    @correlations.first.standards.count.should_not eq(0)
+  describe '#name' do
+    it { @list.name.should == 'english' }
   end
 
-  it 'responds to #title' do
-    @correlations.title.should eq("standard title")
+  describe '#title' do
+    it { @list.title.should == 'English' }
+  end
+
+  describe '#[]' do
+    it 'responds' do
+      @list.should respond_to(:[])
+    end
+
+    it 'is a Verso::Task' do
+      @list[@list.count / 2].should be_a(Verso::Task)
+    end
+  end
+
+  describe '#each' do
+    it 'responds' do
+      @list.should respond_to(:each)
+    end
+
+    it 'yields' do
+      expect { |b| @list.each("foo", &b).to yield_control }
+    end
+
+    it 'yields a Verso::Task' do
+      @list.each do |t|
+        t.should be_a(Verso::Task)
+      end
+    end
+  end
+
+  describe '#empty?' do
+    it 'responds' do
+      @list.should respond_to(:empty?)
+    end
+
+    it 'is not empty' do
+      @list.should_not be_empty
+    end
+  end
+
+  describe '#last' do
+    it 'responds' do
+      @list.should respond_to(:last)
+    end
+
+    it 'is a Verso::Task' do
+      @list.last.should be_a(Verso::Task)
+    end
+  end
+
+  describe '#length' do
+    it 'responds' do
+      @list.should respond_to(:length)
+    end
+
+    it 'is a Fixnum' do
+      @list.length.should be_a(Fixnum)
+    end
+
+    it 'is not zero' do
+      @list.length.should_not == 0
+    end
+  end
+
+  describe '#first' do
+    it 'responds' do
+      @list.should respond_to(:first)
+    end
+
+    it 'is a Verso::Task' do
+      @list.first.should be_a(Verso::Task)
+    end
+  end
+
+  describe '#count' do
+    it 'responds' do
+      @list.should respond_to(:count)
+    end
+
+    it 'is a Fixnum' do
+      @list.count.should be_a(Fixnum)
+    end
+
+    it 'is not zero' do
+      @list.count.should_not == 0
+    end
   end
 end

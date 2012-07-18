@@ -1,57 +1,23 @@
 module Verso
-  class CorrelationList
+  class CorrelationList < Verso::Base
     include Enumerable
     include HTTPGettable
-
-    def initialize(context, name)
-      @context = context
-      @name = name
-    end
+    extend Forwardable
+    def_delegators :correlations, :[], :each, :empty?, :last, :length
+    attr_reader :code, :edition, :name
 
     def title
-      @title ||= @context.standards.find { |s| s.name == @name }.title
-    end
-
-    def code
-      @context.code
-    end
-
-    def edition
-      @context.edition
-    end
-
-    def tasklist
-      @context.duty_areas
-    end
-
-    def sol_names
-      @sol_names ||= @context.standards.sols.collect { |s| s.name }
-    end
-
-    def correlations
-      @correlations ||= JSON.parse(http_get)["correlations"]
-    end
-
-    def each &block
-      count = 0
-      tasklist.each do |da|
-        da.tasks.each do |task|
-          count += 1
-          related = correlations.find { |c| c["id"] == task.id }
-          if related.nil?
-            next
-          else
-            related["number"] = count
-            yield Task.new(related)
-          end
-        end
-      end
+      @title ||= first.goals.first.title
     end
 
   private
 
+    def correlations
+      @correlations ||= get_attr(:correlations).collect { |c| Task.new(c) }
+    end
+
     def path
-      "/courses/#{code},#{edition}/standards/#{@name}/correlations"
+      "/courses/#{code},#{edition}/standards/#{name}/correlations"
     end
   end
 end
