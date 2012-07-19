@@ -4,6 +4,18 @@ describe Verso::CourseList do
   use_vcr_cassette :record => :new_episodes
 
   describe 'searches' do
+    it "searches by code" do
+      results = Verso::CourseList.new(:code => "6320")
+      results.each { |c| c.code.should == "6320" }
+    end
+
+    it "searches by edition" do
+      year = Verso::EditionList.new.first.year
+      results = Verso::CourseList.new(:edition => year)
+      results.first.edition.should == year
+      results.last.edition.should == year
+    end
+
     it "searches by text" do
       results = Verso::CourseList.new(:text => "6321")
       results.first.title.strip.should eq("Accounting, Advanced")
