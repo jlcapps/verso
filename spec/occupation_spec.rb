@@ -1,41 +1,85 @@
 require 'spec_helper'
 
 describe Verso::Occupation do
-  before do
-    @raw_occupation = { "id" => 2966,
-                        "title" => "Agricultural Commodity Broker",
-                        "pathway" => { "title" => "Agriculture" } }
-    @occupation = Verso::Occupation.new(@raw_occupation)
+  use_vcr_cassette :record => :new_episodes
+
+  before(:each) do
+    @occ = Verso::OccupationList.new(:text => "golf").first.occupations.first
   end
 
-  it 'should respond to #title' do
-    @occupation.title.should eq("Agricultural Commodity Broker")
+  describe '#description' do
+    it 'responds' do
+      @occ.should respond_to(:description)
+    end
+
+    it 'is a String' do
+      @occ.description.should be_a(String)
+    end
+
+    it 'is HTML' do
+      @occ.description.should match(/<\/.+>/)
+    end
   end
 
-  it 'should respond to #id' do
-    @occupation.id.should eq(2966)
+  describe '#id' do
+    it 'responds' do
+      @occ.should respond_to(:id)
+    end
+
+    it 'is a Fixnum' do
+      @occ.id.should be_a(Fixnum)
+    end
+
+    it 'is not the same as #object_id' do
+      @occ.id.should_not == @occ.object_id
+    end
   end
 
-  it 'should respond to #pathway' do
-    @occupation.pathway.title.should eq("Agriculture")
+  describe '#pathway' do
+    it 'responds' do
+      @occ.should respond_to(:pathway)
+    end
+
+    it 'is a Verso::Pathway' do
+      @occ.pathway.should be_a(Verso::Pathway)
+    end
   end
 
-  it 'should respond to #related_courses' do
-    Net::HTTP.
-      should_receive(:get).
-      with('api.cteresource.org', "/occupations/2966", 80).
-      and_return(
-        JSON.pretty_generate(
-          :occupation => {
-            :id => 2966,
-            :title => "Agricultural Commodity Broker",
-            :related_courses => [
-              { :code => "8050",
-                :title => "Agricultural Education--Preparation" }
-            ]
-          }
-        )
-      )
-      @occupation.related_courses.first.code.should eq("8050")
+  describe '#preparations' do
+    it 'responds' do
+      @occ.should respond_to(:preparations)
+    end
+
+    it 'is an Array' do
+      @occ.preparations.should be_a(Array)
+    end
+
+    it 'is an Array of Strings' do
+      @occ.preparations.first.should be_a(String)
+    end
+  end
+
+  describe '#related_courses' do
+    it 'responds' do
+      @occ.should respond_to(:related_courses)
+    end
+
+    it 'is an Array' do
+      @occ.related_courses.should be_a(Array)
+    end
+
+    it 'is an Array of Verso::Course objects' do
+      @occ.related_courses.first.should be_a(Verso::Course)
+    end
+  end
+
+  describe '#title' do
+    it 'responds' do
+      @occ.should respond_to(:title)
+    end
+
+    it 'is a String' do
+      @occ.title.should be_a(String)
+    end
   end
 end
