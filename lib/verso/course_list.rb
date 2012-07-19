@@ -2,26 +2,15 @@ module Verso
   class CourseList < Verso::Base
     include Enumerable
     include HTTPGettable
+    extend Forwardable
+    def_delegators :courses, :[], :each, :empty?, :last, :length
 
     def courses
       @courses ||= if q_uri.query_values.values.any?
-                     JSON.parse(http_get)["courses"].
-                       collect { |c| Course.new(c) }
+                       get_attr(:courses).collect { |c| Course.new(c) }
                    else
                      []
                    end
-    end
-
-    def each &block
-      courses.each &block
-    end
-
-    def last
-      courses[-1]
-    end
-
-    def empty?
-      courses.empty?
     end
 
   private
@@ -30,6 +19,7 @@ module Verso
       Addressable::URI.new(
         :path => '/courses',
         :query_values => attrs.
+          reject { |k, v| k == :courses }.
           select { |k, v| v }.
           reject { |k, v| v.to_s.empty? }
       )
