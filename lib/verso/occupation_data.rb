@@ -1,20 +1,15 @@
 module Verso
-  class OccupationData
-    def initialize(od)
-      @raw_od = od.symbolize_nested_keys!
-    end
-
+  class OccupationData < Verso::Base
     def cluster
-      @cluster ||= Cluster.new(@raw_od[:cluster])
+      @cluster ||= Cluster.new(get_attr(:cluster))
     end
 
     def occupations
-      @occupations ||= @raw_od[:occupations].
-        collect { |o| Occupation.new(o) }
+      @occupations ||= get_attr(:occupations).collect { |o| Occupation.new(o) }
     end
 
     def pathway
-      @pathway ||= Pathway.new(@raw_od[:pathway])
+      @pathway ||= Pathway.new(get_attr(:pathway))
     end
 
     def self.find_by_slugs(cslug, pslug, slug)
