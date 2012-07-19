@@ -2,18 +2,16 @@ module Verso
   class ExtrasList < Verso::Base
     include Enumerable
     include HTTPGettable
+    extend Forwardable
     attr_reader :code, :edition
+    def_delegators :extras, :[], :each, :empty?, :last, :length
+
+  private
 
     def extras
       @extras ||= get_attr(:extras).
         collect { |e| Extra.new(e.merge(:code => code, :edition => edition)) }
     end
-
-    def each &block
-      extras.each &block
-    end
-
-  private
 
     def path
       "/courses/#{code},#{edition}/extras/"
