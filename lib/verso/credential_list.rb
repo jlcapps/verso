@@ -2,13 +2,10 @@ module Verso
   class CredentialList < Verso::Base
     include Enumerable
     include HTTPGettable
-    attr_reader :text
+    extend Forwardable
+    def_delegators :credentials, :[], :each, :empty?, :last, :length
 
-    def initialize(attrs={})
-      attrs.symbolize_nested_keys!
-      attrs[:text] = attrs[:text].to_s
-      super attrs
-    end
+  private
 
     def credentials
       @credentials ||= get_attr(:credentials).
@@ -16,24 +13,14 @@ module Verso
         sort_by { |c| c.title }
     end
 
-    def each &block
-      credentials.each &block
-    end
-
-    def last
-      credentials[-1]
-    end
-
-    def empty?
-      credentials.empty?
-    end
-
-  private
-
     def path
       q_uri ||= Addressable::URI.new(:path => '/credentials')
-      q_uri.query_values = { :text => text} unless text.empty?
+      q_uri.query_values = { :text => text } unless text.empty?
       q_uri.request_uri
+    end
+
+    def text
+      attrs[:text] ? attrs[:text] : ''
     end
   end
 end
