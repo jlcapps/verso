@@ -8,13 +8,13 @@ module Verso
       @cluster ||= Cluster.new(@raw_od[:cluster])
     end
 
-    def pathway
-      @pathway ||= Pathway.new(@raw_od[:pathway])
-    end
-
     def occupations
       @occupations ||= @raw_od[:occupations].
         collect { |o| Occupation.new(o) }
+    end
+
+    def pathway
+      @pathway ||= Pathway.new(@raw_od[:pathway])
     end
 
     def self.find_by_slugs(cslug, pslug, slug)
