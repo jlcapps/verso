@@ -1,7 +1,7 @@
 module Verso
   class Occupation < Verso::Base
     include HTTPGettable
-    attr_reader :description, :id, :title
+    attr_reader :description, :id, :preparations, :title
 
     def pathway
       @pathway ||= Pathway.new(get_attr(:pathway))
