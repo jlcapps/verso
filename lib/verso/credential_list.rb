@@ -1,5 +1,22 @@
 module Verso
-  class CredentialList < Verso::Base
+  # Credential list resource
+  #
+  # Search for {Verso::Credential} objects using free text, or get back the
+  # list of all of them.
+  #
+  # @see http://api.cteresource.org/docs/credentials
+  #
+  # @example All
+  #   creds = Verso::CredentialList.new # => everything
+  #   creds.first # => <Verso::Credential:0x007fb1a39e4038 . . . >
+  #
+  # @example Search
+  #   creds = Verso::CredentialList.new(:text => "nocti")
+  #   creds.first.source.title # => "National Occupational Competency Testing Institute (NOCTI)"
+  #
+  # @overload initialize(attrs={})
+  #   @option attrs [String] :text Free text
+class CredentialList < Verso::Base
     include Enumerable
     include HTTPGettable
     extend Forwardable
