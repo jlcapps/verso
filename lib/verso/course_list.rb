@@ -45,6 +45,8 @@ module Verso
     extend Forwardable
     def_delegators :courses, :[], :each, :empty?, :last, :length
 
+    private
+
     def courses
       @courses ||= if q_uri.query_values.values.any?
                        get_attr(:courses).collect { |c| Course.new(c) }
@@ -52,8 +54,6 @@ module Verso
                      []
                    end
     end
-
-  private
 
     def q_uri
       Addressable::URI.new(
