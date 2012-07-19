@@ -10,7 +10,7 @@ module Verso
   #   @return [String] Edition year
   # @!attribute [r] name
   #   @return [String] Standards Body name, used as an identifier and not to
-  #     be confused with is title
+  #     be confused with its title
   #
   # @overload initialize(attrs={})
   #   @note Certain attributes are required for instantiation.
