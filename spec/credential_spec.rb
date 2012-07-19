@@ -203,6 +203,16 @@ describe Verso::Credential do
     end
   end
 
+  describe '#passing_score' do
+    it 'responds' do
+      @credential.should respond_to(:passing_score)
+    end
+
+    it 'is a String' do
+      @credential.passing_score.should be_a(String)
+    end
+  end
+
   describe '#pretest' do
     it 'responds' do
       @credential.should respond_to(:pretest)

@@ -26,6 +26,8 @@ module Verso
   #   @return [Fixnum] Credential id
   # @!attribute [r] items
   #   @return [String] Number of test items
+  # @!attribute [r] passing_score
+  #   @return [Sring] Passing score
   # @!attribute [r] pretest
   #   @return [Boolean,nil] Is a pre-test, study guide, or blueprint available?
   # @!attribute [r] proctor
@@ -52,8 +54,8 @@ module Verso
   class Credential < Verso::Base
     include HTTPGettable
     attr_reader :admin_notes, :amt_seal, :contact_info, :cost, :cte_seal,
-      :description, :has_ancestor, :how_to_earn_it, :id, :items, :pretest,
-      :proctor, :program_area, :retired, :site, :time, :title, :type,
+      :description, :has_ancestor, :how_to_earn_it, :id, :items, :passing_score,
+      :pretest, :proctor, :program_area, :retired, :site, :time, :title, :type,
       :verified_credit
     alias amt_seal? amt_seal
     alias cte_seal? cte_seal
