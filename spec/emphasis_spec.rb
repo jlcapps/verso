@@ -1,31 +1,47 @@
 require 'spec_helper'
 
 describe Verso::Emphasis do
+  use_vcr_cassette :record => :new_episodes
+
   before do
-    @emphasis = Verso::Emphasis.new("id" => 7, "title" => "Earth Science")
+    @emphasis = Verso::EmphasisList.new.last
   end
 
-  it 'responds to #title' do
-    @emphasis.title.should eq("Earth Science")
+  describe '#title' do
+    it 'responds' do
+      @emphasis.should respond_to(:title)
+    end
+
+    it 'is a string' do
+      @emphasis.title.should be_a(String)
+    end
   end
 
-  it 'responds to #occupation_data' do
-    occupation_data = [{
-      "cluster" => { "title" => "Information Technology", "id" => 1 },
-      "pathway" => { "title" => "Information and Support Services", "id" => 2 },
-      "occupations" => [{ "title" => "Database Analyst", "id" => 3 }]
-    }]
-    Net::HTTP.should_receive(:get).
-      with('api.cteresource.org', "/academics/7", 80).
-      and_return(
-        JSON.pretty_generate(
-          :emphasis => {
-            :id => 7, :title => "Earth Science",
-            :occupation_data => occupation_data }
-        )
-      )
-    @emphasis.occupation_data.first.cluster.title.should eq(
-      "Information Technology"
-    )
+  describe '#id' do
+    it 'responds' do
+      @emphasis.should respond_to(:id)
+    end
+
+    it 'is a Fixnum' do
+      @emphasis.id.should be_a(Fixnum)
+    end
+
+    it 'is not the same as #object_id' do
+      @emphasis.id.should_not == @emphasis.object_id
+    end
+  end
+
+  describe '#occupation_data' do
+    it 'responds' do
+      @emphasis.should respond_to(:occupation_data)
+    end
+
+    it 'is an Array' do
+      @emphasis.occupation_data.should be_a(Array)
+    end
+
+    it 'is an Array of Verso::ObjectData objects' do
+      @emphasis.occupation_data.first.should be_a(Verso::OccupationData)
+    end
   end
 end
