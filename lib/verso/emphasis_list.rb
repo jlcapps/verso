@@ -1,4 +1,13 @@
 module Verso
+  # Academic Emphasis List resource
+  #
+  # A collection of all {Verso::Emphasis} objects.
+  #
+  # @see http://api.cteresource.org/docs/academics
+  #
+  # @example Get a list
+  #   emphases = Verso::EmphasisList.new # => all of them
+  #   emphases.first.title # => "Algebra"
   class EmphasisList < Verso::Base
     include Enumerable
     include HTTPGettable
