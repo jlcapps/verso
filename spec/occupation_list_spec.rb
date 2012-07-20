@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 describe Verso::OccupationList do
+  use_vcr_cassette :record => :new_episodes
+
+  it 'returns an empty array if the search is empty' do
+    Verso::OccupationList.new.should be_empty
+  end
+
   it "searches by text" do
     Net::HTTP.should_receive(:get).
       with('api.cteresource.org', '/occupations?text=teacher', 80).

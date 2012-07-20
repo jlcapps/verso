@@ -4,6 +4,7 @@ module Verso
     include HTTPGettable
 
     def occupations
+      return [] if attrs[:text].to_s.empty?
       @occupations ||= get_attr(:occupation_data).
           collect { |o| OccupationData.new(o) }.
           sort_by { |o| [o.cluster.title, o.pathway.title] }
@@ -24,8 +25,8 @@ module Verso
   private
 
     def path
-      Addressable::URI.new(:path => '/occupations',
-                           :query_values => attrs).request_uri
+      @path ||= Addressable::URI.new(:path => '/occupations',
+                                     :query_values => attrs).request_uri
     end
   end
 end
