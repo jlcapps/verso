@@ -2,6 +2,10 @@ module Verso
   class OccupationList < Verso::Base
     include Enumerable
     include HTTPGettable
+    extend Forwardable
+    def_delegators :occupations, :[], :each, :empty?, :last, :length
+
+  private
 
     def occupations
       return [] if attrs[:text].to_s.empty?
@@ -9,20 +13,6 @@ module Verso
           collect { |o| OccupationData.new(o) }.
           sort_by { |o| [o.cluster.title, o.pathway.title] }
     end
-
-    def each &block
-      occupations.each &block
-    end
-
-    def last
-      occupations[-1]
-    end
-
-    def empty?
-      occupations.empty?
-    end
-
-  private
 
     def path
       @path ||= Addressable::URI.new(:path => '/occupations',
