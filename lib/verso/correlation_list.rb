@@ -32,7 +32,8 @@ module Verso
   private
 
     def correlations
-      @correlations ||= get_attr(:correlations).collect { |c| Task.new(c) }
+      @correlations ||= get_attr(:correlations).
+        collect { |c| Task.new(c.merge(:code => code, :edition => edition)) }
     end
 
     def path

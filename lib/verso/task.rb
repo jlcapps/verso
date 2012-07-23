@@ -44,7 +44,9 @@ module Verso
 
     # @return [Verso::StandardsList] Standards related to this task
     def standards
-      @standards ||= StandardsList.new(get_attr(:goals))
+      @standards ||= StandardsList.new(
+        get_attr(:goals).merge(:code => code, :edition => edition)
+      )
     end
     alias goals standards
 
