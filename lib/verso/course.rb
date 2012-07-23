@@ -123,7 +123,8 @@ module Verso
       @standards ||= if self.related_resources.include?("standards")
                        StandardsList.from_course(self)
                      else
-                       StandardsList.new([], self)
+                       StandardsList.new(:code => code, :edition => edition,
+                                         :standards => [])
                      end
     end
 
