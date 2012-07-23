@@ -1,4 +1,7 @@
 module Verso
+  # Program Area List resource
+  #
+  # @see http://api.cteresource.org/docs/program_areas
   class ProgramAreaList < Verso::Base
     include Enumerable
     include HTTPGettable
