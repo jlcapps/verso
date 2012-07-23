@@ -1,41 +1,61 @@
 require 'spec_helper'
 
 describe Verso::Pathway do
+  use_vcr_cassette :record => :new_episodes
+
   before do
-    @raw_cluster = { "title" => "Agriculture, Food, and Natural Resources",
-                     "id" => 49 }
-    @raw_pathway = { "title" => "Agribusiness Systems", "id" => 306 ,
-                     "cluster" => @raw_cluster }
-    @pathway = Verso::Pathway.new(@raw_pathway)
+    @pathway = Verso::ClusterList.new.first.pathways.first
   end
 
-  it 'should respond to #title' do
-    @pathway.title.should eq('Agribusiness Systems')
+  describe '#cluster' do
+    it 'responds' do
+      @pathway.should respond_to(:cluster)
+    end
+
+    it 'is a Verso::Cluster' do
+      @pathway.cluster.should be_a(Verso::Cluster)
+    end
   end
 
-  it 'should respond to #cluster' do
-    @pathway.cluster.id.should eq(49)
+  describe '#description' do
+    it 'responds' do
+      @pathway.should respond_to(:description)
+    end
+
+    it 'is a String' do
+      @pathway.description.should be_a(String)
+    end
+
+    it 'is HTML' do
+      @pathway.description.should match(/<\/.+>/)
+    end
   end
 
-  it 'should respond to #id' do
-    @pathway.id.should eq(306)
+  describe '#id' do
+    it 'responds' do
+      @pathway.should respond_to(:id)
+    end
+
+    it 'is a Fixnum' do
+      @pathway.id.should be_a(Fixnum)
+    end
+
+    it 'is not the same as #object_id' do
+      @pathway.id.should_not == @pathway.object_id
+    end
   end
 
-  it 'should respond to #occupations' do
-    Net::HTTP.
-      should_receive(:get).
-      with('api.cteresource.org', "/pathways/306", 80).
-      and_return(
-        JSON.pretty_generate(
-          :pathway => {
-            :id => 306,
-            :title => "Agribusiness Systems",
-            :occupations => [
-              { :id => 2966, :title => "Agricultural Commodity Broker" }
-            ]
-          }
-        )
-      )
-    @pathway.occupations.first.title.should eq('Agricultural Commodity Broker')
+  describe '#occupations' do
+    it 'responds' do
+      @pathway.should respond_to(:occupations)
+    end
+
+    it 'is an Array' do
+      @pathway.occupations.should be_a(Array)
+    end
+
+    it 'is an Array containing Verso::Occupation objects' do
+      @pathway.occupations.first.should be_a(Verso::Occupation)
+    end
   end
 end
