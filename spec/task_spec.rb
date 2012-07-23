@@ -76,6 +76,20 @@ describe Verso::Task do
     end
   end
 
+  describe '#id' do
+    it 'responds' do
+      @task.should respond_to(:id)
+    end
+
+    it 'is a Fixnum' do
+      @task.id.should be_a(String)
+    end
+
+    it 'is not the same as #object_id' do
+      @task.id.should_not == @task.object_id
+    end
+  end
+
   describe '#questions' do
     it 'responds' do
       @task.should respond_to(:questions)
