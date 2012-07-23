@@ -1,11 +1,11 @@
 module Verso
-  class ProgramAreaList
+  class ProgramAreaList < Verso::Base
     include Enumerable
     include HTTPGettable
 
     def program_areas
-      @program_areas ||= JSON.parse(http_get)["program_areas"].
-        collect { |pa| ProgramArea.new(pa) }
+      @program_areas ||= get_attr(:program_areas).
+                           collect { |pa| ProgramArea.new(pa) }
     end
 
     def each &block
