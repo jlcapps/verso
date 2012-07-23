@@ -29,6 +29,75 @@ describe Verso::TaskList do
     end
   end
 
+  describe '#has_optional_task?' do
+    it 'responds' do
+      @tl.should respond_to(:has_optional_task?)
+    end
+
+    it 'is Boolean' do
+      @tl.has_optional_task?.to_s.should match(/true|false/)
+    end
+
+    it 'is true if a task is non-essential' do
+      tl = Verso::TaskList.new(
+        :code => "6320",
+        :edition => Verso::EditionList.new.last.year,
+        :duty_areas => [
+          { :title => "",
+            :tasks => [
+              { :statement => '', :id => "12",
+                :sensitive => false, :essential => false }
+            ]
+        }]
+      )
+      tl.has_optional_task?.should be_true
+    end
+
+    it 'is false if all tasks are essential' do
+      tl = Verso::TaskList.new(
+        :code => "6320",
+        :edition => Verso::EditionList.new.last.year,
+        :duty_areas => [
+          { :title => "",
+            :tasks => [
+              { :statement => '', :id => "12",
+                :sensitive => false, :essential => true }
+            ]
+        }]
+      )
+      tl.has_optional_task?.should be_false
+    end
+  end
+
+  describe '#has_sensitive_task?' do
+    it 'responds' do
+      @tl.should respond_to(:has_sensitive_task?)
+    end
+
+    it 'is Boolean' do
+      @tl.has_sensitive_task?.to_s.should match(/true|false/)
+    end
+
+    it 'is false if no task is sensitive' do
+      @tl.has_sensitive_task?.should be_false
+    end
+
+    it 'is true if a task is sensitive' do
+      tl = Verso::TaskList.new(
+        :code => "6320",
+        :edition => Verso::EditionList.new.last.year,
+        :duty_areas => [
+          { :title => "",
+            :tasks => [
+              { :statement => '', :id => "12",
+                :sensitive => true, :essential => true }
+            ]
+        }]
+      )
+      tl.has_sensitive_task?.should be_true
+    end
+  end
+
   describe 'array-like behavior' do
     describe '#[]' do
       it 'responds' do
@@ -106,7 +175,7 @@ describe Verso::TaskList do
   end
 
   it "is empty if no task list is published" do
-    @tl = Verso::TaskList.new(:code => "1234", :edition => "1929")
-    @tl.should be_empty
+    tl = Verso::TaskList.new(:code => "1234", :edition => "1929")
+    tl.should be_empty
   end
 end
