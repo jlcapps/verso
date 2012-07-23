@@ -17,27 +17,16 @@ Ruby 1.8.7.
     cd verso
     rake install
 
-## Caveat
+## Quick Start
 
-This gem has been *extracted* from a larger project, the Web application that
-presents [Verso](http://www.cteresource.org/verso/), the [Administrative
-Planning Guide](http://www.cteresource.org/apg/), and the [Career Planning
-Guide](http://www.cteresource.org/cpg/) on the Virginia CTE Resource Center Web
-site. For this reason the object interfaces are sometimes inconsistent (for
-instance collection objects do not always respond to all the expected
-methods -- `#to_a` is your friend), the specs are incomplete, and the
-documentation is nil.
-
-All that said, the wrapper is reasonably complete, and should make a great
-starting pointing for getting course, curriculum, and occupation data out of
-Verso. The classes available in lib/verso correspond to the resources described
-in the [API documentation](http://api.cteresource.org/docs). The usual points
-of entry are the [Cluster List](http://api.cteresource.org/docs/clusters), the
+The wrapper should make a great starting pointing for getting course,
+curriculum, and occupation data out of Verso. The classes available in
+lib/verso correspond to the resources described in the [API
+documentation](http://api.cteresource.org/docs). The usual points of entry
+are the [Cluster List](http://api.cteresource.org/docs/clusters), the
 [Course List](http://api.cteresource.org/docs/courses), the [Occupation
 List](http://api.cteresource.org/docs/occupations), and the [Credential
 List](http://api.cteresource.org/docs/credentials).
-
-## Quick Start
 
 ### Start with Clusters
 
@@ -52,7 +41,7 @@ List](http://api.cteresource.org/docs/credentials).
     require 'verso'
     course = Verso::CourseList.new(:code => "6321").first
     course.title # => "Accouting, Advanced"
-    da = course.duty_areas.to_a[5] # I warned you about the incomplete interface . . . .
+    da = course.duty_areas[5]
     da.title # => "Using Technology to Implement Accounting Procedures"
     da.tasks.last.statement # => "Apply emerging technology trends used in the accounting profession."
 

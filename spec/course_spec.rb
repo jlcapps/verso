@@ -356,7 +356,7 @@ describe Verso::Course do
     end
 
     it 'returns a Verso::Task object' do
-      task_id = @course.duty_areas.to_a.last.tasks.first.id
+      task_id = @course.duty_areas.last.tasks.first.id
       @course.task(task_id).should be_a(Verso::Task)
     end
   end

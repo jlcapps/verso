@@ -7,7 +7,7 @@ describe Verso::Task do
     @task = Verso::CourseList.new(:code => "6320").
       last.
       duty_areas.
-      to_a.last.
+      last.
       tasks.
       first
   end

@@ -4,7 +4,7 @@ describe Verso::DutyArea do
   use_vcr_cassette :record => :new_episodes
 
   before do
-    @da = Verso::CourseList.new(:code => "6320").last.duty_areas.to_a.last
+    @da = Verso::CourseList.new(:code => "6320").last.duty_areas.last
   end
 
   describe '#code' do
