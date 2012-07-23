@@ -1,19 +1,40 @@
 module Verso
-  class StandardsList < Verso::Base
+  # Standards List resource
+  #
+  # A collection of {Verso::Standard} objects correlated to a {Verso::Course}.
+  #
+  # @see http://api.cteresource.org/docs/courses/course/standards
+  #
+  # @!attribute [r] code
+  #   @return [String] Course code
+  # @!attribute [r] edition
+  #   @return [String] Course edition year
+  #
+  # @overload initialize(attrs={})
+  #   @note Attributes required:
+  #   @option attrs [String] :code Course code *Required*
+  #   @option attrs [String] :edition Edition year *Required*
+class StandardsList < Verso::Base
     include Enumerable
     include HTTPGettable
     extend Forwardable
     def_delegators :standards, :[], :each, :empty?, :last, :length
     attr_reader :code, :edition
 
+    # @return [Array] Non-SOL standards in this list
     def non_sols
       @non_sols ||= reject { |s| sol_titles.include?(s.title) }
     end
 
+    # @return [Array] SOL standards in this list
     def sols
       @sols ||= select { |s| sol_titles.include?(s.title) }
     end
 
+    # Find Standards by {Verso::Course}.
+    #
+    # @param course [Verso::Course] A {Verso::Course}
+    # @return [Verso::StandardsList] A {Verso::Course}'s standards
     def self.from_course(course)
       StandardsList.new(:code => course.code, :edition => course.edition)
     end
