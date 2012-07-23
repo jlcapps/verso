@@ -1,7 +1,7 @@
 module Verso
   # Program Area
   #
-  # Contained by Program Area list resource
+  # Contained by {Verso::ProgramAreaList} resource
   #
   # @see http://api.cteresource.org/docs/program_areas
   #
