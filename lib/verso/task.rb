@@ -44,8 +44,14 @@ module Verso
 
     # @return [Verso::StandardsList] Standards related to this task
     def standards
+      # Yuck. Inject goals if we already have them, i.e. a correlation list.
+      # Otherwise, children will fetch resources and we get *all* the
+      # standards in the correlation lists.
+      raw_goals =  get_attr(:goals).collect do |k,v|
+                     v.merge(:name => k, :code => code, :edition => edition)
+                   end
       @standards ||= StandardsList.new(
-        get_attr(:goals).merge(:code => code, :edition => edition)
+        :code => code, :edition => edition, :standards => raw_goals
       )
     end
     alias goals standards
