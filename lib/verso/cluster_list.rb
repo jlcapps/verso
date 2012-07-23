@@ -1,6 +1,8 @@
 module Verso
   # Career Cluster List Resource
   #
+  # A collection of {Verso::Cluster} objects
+  #
   # @see http://api.cteresource.org/docs/clusters
   # @see http://www.careertech.org/career-clusters/glance/clusters.html
   class ClusterList < Verso::Base
