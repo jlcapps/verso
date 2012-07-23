@@ -1,57 +1,128 @@
 require 'spec_helper'
 
 describe Verso::Task do
-  context "when you are fetching full task" do
-    before do
-      @task = Verso::Task.new("code" => "6320",
-                              "edition" => "2011",
-                              "id" => "1")
+  use_vcr_cassette :record => :new_episodes
+
+  before(:each) do
+    @task = Verso::CourseList.new(:code => "6320").
+      last.
+      duty_areas.
+      to_a.last.
+      tasks.
+      first
+  end
+
+  describe '#code' do
+    it 'responds' do
+      @task.should respond_to(:code)
     end
 
-    it "fetches the full task" do
-      @task.should_receive(:http_get).and_return(
-        JSON.pretty_generate(:statement => "a statement")
-      )
-      @task.statement.should eq("a statement")
-    end
-
-    it "responds to standards" do
-      @task.should_receive(:get_attr).with(:goals).and_return({})
-      Verso::StandardsList.should_receive(:new)
-      @task.standards
+    it 'is a String' do
+      @task.code.should be_a(String)
     end
   end
 
-  context "when you are working from a short task" do
-    before do
-      @goals = { "a_body" => { "title" => "A Body",
-                               "description" => "A Description",
-                               "goals" => [],
-                               "sections" => [] } }
-      @task = Verso::Task.new("statement" => "Do this.", "id" => "12345",
-                       "sensitive" => false, "essential" => true,
-                       "goals" => @goals)
+  describe '#definition' do
+    it 'responds' do
+      @task.should respond_to(:definition)
     end
 
-    it "responds to #statement" do
-      @task.statement.should eq("Do this.")
+    it 'is a Sring' do
+      @task.definition.should be_a(String)
     end
 
-    it "responds to #id" do
-      @task.id.should eq("12345")
+    it 'looks like HTML' do
+      @task.definition.should match(/<\/.+>/)
     end
-    it "responds to #sensitive" do
-      @task.sensitive.should eq(false)
+  end
+
+  describe '#edition' do
+    it 'responds' do
+      @task.should respond_to(:edition)
     end
 
-    it "responds to #essential" do
-      @task.essential.should eq(true)
+    it 'is a String' do
+      @task.edition.should be_a(String)
+    end
+  end
+
+  describe '#essential' do
+    it 'responds' do
+      @task.should respond_to(:essential)
     end
 
-    it "responds to #standards" do
-      @standard = double("Verso::Standard", :title => "A Body")
-      Verso::StandardsList.should_receive(:new).with(@goals).and_return([@standard])
-      @task.standards.first.title.should eq("A Body")
+    it 'is a Boolean' do
+      @task.essential.to_s.should match(/true|false/)
+    end
+  end
+
+  describe '#essential?' do
+    it 'responds' do
+      @task.should respond_to(:essential?)
+    end
+
+    it 'is a Boolean' do
+      @task.essential?.to_s.should match(/true|false/)
+    end
+  end
+
+  describe '#goals' do
+    it 'responds' do
+      @task.should respond_to(:goals)
+    end
+
+    it 'is a Verso::StandardsList' do
+      @task.goals.should be_a(Verso::StandardsList)
+    end
+  end
+
+  describe '#questions' do
+    it 'responds' do
+      @task.should respond_to(:questions)
+    end
+
+    it 'is a String' do
+      @task.questions.should be_a(String)
+    end
+  end
+
+  describe '#sensitive' do
+    it 'responds' do
+      @task.should respond_to(:sensitive)
+    end
+
+    it 'is a Boolean' do
+      @task.sensitive.to_s.should match(/true|false/)
+    end
+  end
+
+  describe '#sensitive?' do
+    it 'responds' do
+      @task.should respond_to(:sensitive?)
+    end
+
+    it 'is a Boolean' do
+      @task.sensitive?.to_s.should match(/true|false/)
+    end
+  end
+
+  describe '#standards' do
+    it 'responds' do
+      @task.should respond_to(:standards)
+    end
+
+    it 'is a Verso::StandardsList' do
+      @task.standards.should be_a(Verso::StandardsList)
+    end
+  end
+
+  describe '#statement' do
+    it 'responds' do
+      @task.should respond_to(:statement)
+    end
+
+    it 'is a String' do
+      @task.statement.should be_a(String)
     end
   end
 end
