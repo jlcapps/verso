@@ -14,10 +14,6 @@ module Verso
     end
     alias essential? essential
 
-    def number
-      attrs[:number]
-    end
-
     def standards
       @standards ||= StandardsList.new(get_attr(:goals))
     end
