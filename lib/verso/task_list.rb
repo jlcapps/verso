@@ -2,20 +2,9 @@ module Verso
   class TaskList < Verso::Base
     include Enumerable
     include HTTPGettable
+    extend Forwardable
+    def_delegators :duty_areas, :[], :each, :empty?, :last, :length
     attr_reader :code, :edition
-
-    def duty_areas
-      @duty_areas ||= begin
-                        get_attr(:duty_areas).
-                          collect do |da|
-                            DutyArea.new(
-                              da.merge!(:code => code, :edition => edition)
-                            )
-                          end
-                      rescue NameError
-                        []
-                      end
-    end
 
     def has_optional_task?
       any? { |da| da.tasks.any? { |t| !t.essential } }
@@ -30,6 +19,19 @@ module Verso
     end
 
   private
+
+    def duty_areas
+      @duty_areas ||= begin
+                        get_attr(:duty_areas).
+                          collect do |da|
+                            DutyArea.new(
+                              da.merge!(:code => code, :edition => edition)
+                            )
+                          end
+                      rescue NameError
+                        []
+                      end
+    end
 
     def path
       "/courses/#{code},#{edition}/tasks/"
