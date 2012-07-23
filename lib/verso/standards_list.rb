@@ -1,50 +1,39 @@
 module Verso
-  class StandardsList
+  class StandardsList < Verso::Base
     include Enumerable
+    include HTTPGettable
+    extend Forwardable
+    def_delegators :standards, :[], :each, :empty?, :last, :length
+    attr_reader :code, :edition
 
-    def initialize(raw, context=nil)
-      @raw_standards = (raw.is_a?(Array) ? raw : raw.values).
-        collect { |s| s.symbolize_nested_keys! }
-      @context = context
-    end
-
-    def self.from_course(course)
-      raw_standards = JSON.parse(
-        Net::HTTP.get('api.cteresource.org',
-                      "/courses/#{course.code},#{course.edition}/standards/",
-                      80)
-      ).symbolize_nested_keys![:standards]
-      StandardsList.new(raw_standards, course)
-    end
-
-    def standards
-      @standards ||= @raw_standards.
-        sort_by { |s| s[:title] }.
-        collect { |raw_standard| Standard.new(raw_standard, @context) }
-    end
-
-    def each &block
-      standards.each &block
-    end
-
-    def last
-      standards[-1]
-    end
-
-    def empty?
-      standards.empty?
-    end
-
-    def sol_titles
-      ['English', 'History and Social Science', 'Mathematics', 'Science']
+    def non_sols
+      @non_sols ||= reject { |s| sol_titles.include?(s.title) }
     end
 
     def sols
       @sols ||= select { |s| sol_titles.include?(s.title) }
     end
 
-    def non_sols
-      @non_sols ||= reject { |s| sol_titles.include?(s.title) }
+    def self.from_course(course)
+      StandardsList.new(:code => course.code, :edition => course.edition)
+    end
+
+  private
+
+    def sol_titles
+      ['English', 'History and Social Science', 'Mathematics', 'Science']
+    end
+
+    def standards
+      @standards ||= get_attr(:standards).
+        sort_by { |s| s[:title] }.
+        collect do |raw_standard|
+          Standard.new(raw_standard.merge(:code => code, :edition => edition))
+        end
+    end
+
+    def path
+      "/courses/#{code},#{edition}/standards/"
     end
   end
 end
