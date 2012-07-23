@@ -3,14 +3,14 @@ module Verso
     include HTTPGettable
     attr_reader :deprecated, :official, :section_overview, :title, :version_date
 
-    def description
-      ""
-    end
-
     def courses
       @courses ||= CourseList.new(:program_area => slug.gsub('-', ' ')).
                      sort_by { |c| c.title + c.edition }.
                      uniq { |c| c.code + c.edition }
+    end
+
+    def description
+      ""
     end
 
     def slug
