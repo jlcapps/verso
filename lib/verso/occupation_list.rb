@@ -1,4 +1,17 @@
 module Verso
+  # Occupation list resource
+  #
+  # Search {Verso::Occupation} objects using free text. Result is a collection
+  # of {Verso::OccupationData} objects containing relevant {Verso::Occupation}
+  # objects.
+  #
+  # @see http://api.cteresource.org/docs/occupations
+  #
+  # @example Search by free text
+  #   ods = Verso::OccupationList.new(:text => "golf") # => golf-related ODs
+  #
+  # @overload initialize(attrs={})
+  #   @option attrs [String] :text Free text
   class OccupationList < Verso::Base
     include Enumerable
     include HTTPGettable
