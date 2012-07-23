@@ -1,6 +1,8 @@
 module Verso
   # Program Area List resource
   #
+  # A collection of {Verso::ProgramArea} objects.
+  #
   # @see http://api.cteresource.org/docs/program_areas
   class ProgramAreaList < Verso::Base
     include Enumerable
