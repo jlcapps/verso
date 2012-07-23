@@ -4,85 +4,109 @@ describe Verso::TaskList do
   use_vcr_cassette :record => :new_episodes
 
   before do
-    @edition = Verso::EditionList.new.last.year
-    @tl = Verso::TaskList.new(:code => "6320", :edition => @edition)
+    @tl = Verso::TaskList.new(
+      :code => "6320",
+      :edition => Verso::EditionList.new.last.year)
   end
 
-  it "responds to #first" do
-    @tl.first.should be_a(Verso::DutyArea)
+  describe '#code' do
+    it 'responds' do
+      @tl.should respond_to(:code)
+    end
+
+    it 'is a String' do
+      @tl.code.should be_a(String)
+    end
   end
 
-  it "responds to #code, #edition" do
-    @tl.code.should eq("6320")
-    @tl.edition.should eq(@edition)
+  describe '#edition' do
+    it 'responds' do
+      @tl.should respond_to(:edition)
+    end
+
+    it 'is a String' do
+      @tl.edition.should be_a(String)
+    end
   end
 
-  it "responds to #has_optional_task? when true" do
-    @tl.stub(:duty_areas).
-      and_return(
-        [Verso::DutyArea.new(
-          {"title" => "DA Title",
-           "code" => "6320",
-           "edition" => "2012",
-           "tasks" => [
-             { "statement" => "one",
-               "sensitive" => false,
-               "essential" => false }]}
-        )]
-      )
-    @tl.has_optional_task?.should eq(true)
+  describe 'array-like behavior' do
+    describe '#[]' do
+      it 'responds' do
+        @tl.should respond_to(:[])
+      end
+
+      it 'gets a Verso::DutyArea object' do
+        @tl[10].should be_a(Verso::DutyArea)
+      end
+    end
+
+    describe '#each' do
+      it 'responds' do
+        @tl.should respond_to(:each)
+      end
+
+      it 'yields' do
+        expect { |b| @tl.each("foo", &b).to yield_control }
+      end
+
+      it 'yields Verso::DutyArea objects' do
+        @tl.each { |c| c.should be_a(Verso::DutyArea) }
+      end
+    end
+
+    describe '#empty?' do
+      it 'responds' do
+        @tl.should respond_to(:empty?)
+      end
+
+      it 'is not empty' do
+        @tl.should_not be_empty
+      end
+    end
+
+    describe '#last' do
+      it 'responds' do
+        @tl.should respond_to(:last)
+      end
+
+      it 'is a Verso::DutyArea object' do
+        @tl.last.should be_a(Verso::DutyArea)
+      end
+    end
+
+    describe '#length' do
+      it 'responds' do
+        @tl.should respond_to(:length)
+      end
+
+      it 'is a Fixnum' do
+        @tl.length.should be_a(Fixnum)
+      end
+    end
+
+    describe '#first' do
+      it 'responds' do
+        @tl.should respond_to(:first)
+      end
+
+      it 'is a Verso::DutyArea object' do
+        @tl.first.should be_a(Verso::DutyArea)
+      end
+    end
+
+    describe '#count' do
+      it 'responds' do
+        @tl.should respond_to(:count)
+      end
+
+      it 'is a Fixnum' do
+        @tl.count.should be_a(Fixnum)
+      end
+    end
   end
 
-  it "responds to #has_optional_task? when false" do
-    @tl.stub(:duty_areas).
-      and_return(
-        [Verso::DutyArea.new(
-          {"title" => "DA Title",
-           "code" => "6320",
-           "edition" => "2012",
-           "tasks" => [
-             { "statement" => "one",
-               "sensitive" => false,
-               "essential" => true }]}
-        )]
-      )
-    @tl.has_optional_task?.should eq(false)
-  end
-
-  it "responds to #has_sensitive_task? when true" do
-    @tl.stub(:duty_areas).
-      and_return(
-        [Verso::DutyArea.new(
-          {"title" => "DA Title",
-           "code" => "6320",
-           "edition" => "2012",
-           "tasks" => [
-             { "statement" => "one",
-               "sensitive" => true,
-               "essential" => true }]}
-        )]
-      )
-    @tl.has_sensitive_task?.should eq(true)
-  end
-
-  it "responds to #has_sensitive_task? when false" do
-    @tl.stub(:duty_areas).
-      and_return(
-        [Verso::DutyArea.new(
-          {"title" => "DA Title",
-           "code" => "6320",
-           "edition" => "2012",
-           "tasks" => [
-             { "statement" => "one",
-               "sensitive" => false,
-               "essential" => true }]}
-        )]
-      )
-    @tl.has_sensitive_task?.should eq(false)
-  end
-
-  it "should return an empty task list if none is published" do
+  it "is empty if no task list is published" do
     @tl = Verso::TaskList.new(:code => "1234", :edition => "1929")
-    @tl.duty_areas.should eq([])
+    @tl.should be_empty
   end
 end
