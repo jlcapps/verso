@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'shared_verso_list_examples'
 
 describe Verso::CourseList do
   use_vcr_cassette :record => :new_episodes
@@ -45,81 +46,10 @@ describe Verso::CourseList do
 
   describe 'array-like behavior' do
     before(:each) do
-      @courses = Verso::CourseList.new(:cluster => "Information Technology")
+      @list = Verso::CourseList.new(:cluster => "Information Technology")
+      @kontained = Verso::Course
     end
 
-    describe '#[]' do
-      it 'responds' do
-        @courses.should respond_to(:[])
-      end
-
-      it 'gets a Verso::Course object' do
-        @courses[10].should be_a(Verso::Course)
-      end
-    end
-
-    describe '#each' do
-      it 'responds' do
-        @courses.should respond_to(:each)
-      end
-
-      it 'yields' do
-        expect { |b| @courses.each("foo", &b).to yield_control }
-      end
-
-      it 'yields Verso::Course objects' do
-        @courses.each { |c| c.should be_a(Verso::Course) }
-      end
-    end
-
-    describe '#empty?' do
-      it 'responds' do
-        @courses.should respond_to(:empty?)
-      end
-
-      it 'is not empty' do
-        @courses.should_not be_empty
-      end
-    end
-
-    describe '#last' do
-      it 'responds' do
-        @courses.should respond_to(:last)
-      end
-
-      it 'is a Verso::Course object' do
-        @courses.last.should be_a(Verso::Course)
-      end
-    end
-
-    describe '#length' do
-      it 'responds' do
-        @courses.should respond_to(:length)
-      end
-
-      it 'is a Fixnum' do
-        @courses.length.should be_a(Fixnum)
-      end
-    end
-
-    describe '#first' do
-      it 'responds' do
-        @courses.should respond_to(:first)
-      end
-
-      it 'is a Verso::Course object' do
-        @courses.first.should be_a(Verso::Course)
-      end
-    end
-
-    describe '#count' do
-      it 'responds' do
-        @courses.should respond_to(:count)
-      end
-
-      it 'is a Fixnum' do
-        @courses.count.should be_a(Fixnum)
-      end
-    end
+    it_behaves_like "any Verso list"
   end
 end
