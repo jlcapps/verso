@@ -40,7 +40,7 @@ List](http://api.cteresource.org/docs/credentials).
 
     require 'verso'
     course = Verso::CourseList.new(:code => "6321").first
-    course.title # => "Accouting, Advanced"
+    course.title # => "Accounting, Advanced"
     da = course.duty_areas[5]
     da.title # => "Using Technology to Implement Accounting Procedures"
     da.tasks.last.statement # => "Apply emerging technology trends used in the accounting profession."
