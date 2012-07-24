@@ -80,8 +80,8 @@ module Verso
       get_attr(:details).to_s # #to_s b/c API sometimes returns nil
     end
 
-    # Source. Responds to #title, #url, and #contact_info. All are Strings.
-    # The last is HTML-formatted.
+    # Source. Responds to #title, #url, and #contact_info. All are Strings or
+    # nil. The last is HTML-formatted.
     #
     # @return [OpenStruct] Source
     def source
