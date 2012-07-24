@@ -6,8 +6,7 @@ Technical Education curriculum, course, and occupation data.
 
 ## Installation
 
-The verso gem has been tested with Ruby 1.9.3. It does not currently work with
-Ruby 1.8.7.
+The verso gem has been tested with Ruby 1.9.3 and 1.8.7.
 
     gem install verso
 
