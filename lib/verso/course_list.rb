@@ -29,9 +29,10 @@ module Verso
   #   courses = Verso::CourseList.new(:text => "internet", :cluster => "Marketing") # => <Verso::CourseList:0x007fa5a19b6c90 @attrs={ . . . }>
   #   courses.count # => 1
   #
-  # @example An empty search returns an empty list
+  # @example Calling #new with no attrs
   #   courses = Verso::CourseList.new
-  #   courses.count # => 0
+  #   courses.count # => A big number
+  #   courses # => All the courses
   #
   # @overload initialize(attrs={})
   #   @option attrs [String] :code Course code
@@ -48,7 +49,7 @@ module Verso
     private
 
     def courses
-      @courses ||= if q_uri.query_values.values.any?
+      @courses ||= if attrs.empty? || q_uri.query_values.values.any?
                        get_attr(:courses).collect { |c| Course.new(c) }
                    else
                      []
@@ -66,7 +67,7 @@ module Verso
     end
 
     def path
-      q_uri.request_uri
+      attrs.empty? ? '/courses/' : q_uri.request_uri
     end
   end
 end

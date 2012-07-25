@@ -4,7 +4,7 @@ require 'shared_verso_list_examples'
 describe Verso::CourseList do
   use_vcr_cassette :record => :new_episodes
 
-  describe 'searches' do
+  describe 'search' do
     it "searches by code" do
       results = Verso::CourseList.new(:code => "6320")
       results.each { |c| c.code.should == "6320" }
@@ -28,19 +28,22 @@ describe Verso::CourseList do
         should eq("Equine Management Production")
     end
 
-    it "can find courses by program area too" do
+    it "finds courses by program area too" do
       results = Verso::CourseList.new(:program_area => "across the board")
       results.first.title.strip.should eq("Work-Based Learning through Service")
     end
 
-    it "should return empty results when queries are empty" do
-      Verso::CourseList.new({}).count.should == 0
+    it "returns empty results when queries are empty" do
       [:text, :program_area, :cluster].each do |k|
         Verso::CourseList.new(k => nil).count.should == 0
         Verso::CourseList.new(k => '').count.should == 0
       end
       Verso::CourseList.new(:text => '', :program_area => '', :cluster => '').
         count.should == 0
+    end
+
+    it 'return everything when #new is called without attrs' do
+      Verso::CourseList.new.count.should_not == 0
     end
   end
 
