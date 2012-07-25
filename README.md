@@ -65,6 +65,11 @@ Search for Occupations, get back lists of "occupation data," i.e., a list of lis
     creds.first.title # => "Computer Programming (NOCTI)"
     creds.first.related_courses.last # => "Programming, Advanced"
 
+## Additional Documentation
+
+* [http://api.cteresource.org/docs](http://api.cteresource.org/docs)
+* [http://rubydoc.info/gems/verso/](http://rubydoc.info/gems/verso/)
+
 In general, the objects returned from the wrapper should respond to calls to
 the attributes described in the API documentation. Open an issue on GitHub or
 send an email to lcapps@cteresource.org if you have questions or concerns.
