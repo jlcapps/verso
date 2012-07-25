@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'shared_verso_list_examples'
 
 describe Verso::StandardsList do
   use_vcr_cassette :record => :new_episodes
@@ -8,83 +9,10 @@ describe Verso::StandardsList do
       :code => "6320",
       :edition => Verso::EditionList.new.last.year
     )
+    @kontained = Verso::Standard
   end
 
-  describe 'array-like behavior' do
-    describe '#[]' do
-      it 'responds' do
-        @list.should respond_to(:[])
-      end
-
-      it 'gets a Verso::Standard object' do
-        @list[2].should be_a(Verso::Standard)
-      end
-    end
-
-    describe '#each' do
-      it 'responds' do
-        @list.should respond_to(:each)
-      end
-
-      it 'yields' do
-        expect { |b| @list.each("foo", &b).to yield_control }
-      end
-
-      it 'yields Verso::Standard objects' do
-        @list.each { |c| c.should be_a(Verso::Standard) }
-      end
-    end
-
-    describe '#empty?' do
-      it 'responds' do
-        @list.should respond_to(:empty?)
-      end
-
-      it 'is not empty' do
-        @list.should_not be_empty
-      end
-    end
-
-    describe '#last' do
-      it 'responds' do
-        @list.should respond_to(:last)
-      end
-
-      it 'is a Verso::Standard object' do
-        @list.last.should be_a(Verso::Standard)
-      end
-    end
-
-    describe '#length' do
-      it 'responds' do
-        @list.should respond_to(:length)
-      end
-
-      it 'is a Fixnum' do
-        @list.length.should be_a(Fixnum)
-      end
-    end
-
-    describe '#first' do
-      it 'responds' do
-        @list.should respond_to(:first)
-      end
-
-      it 'is a Verso::Standard object' do
-        @list.first.should be_a(Verso::Standard)
-      end
-    end
-
-    describe '#count' do
-      it 'responds' do
-        @list.should respond_to(:count)
-      end
-
-      it 'is a Fixnum' do
-        @list.count.should be_a(Fixnum)
-      end
-    end
-  end
+  it_behaves_like 'any Verso list'
 
   describe '#non_sols' do
     it 'responds' do
