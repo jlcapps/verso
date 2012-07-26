@@ -69,5 +69,11 @@ describe Verso::StandardsList do
       list.code.should == @course.code
       list.edition.should == @course.edition
     end
+
+    it 'returns an empty list if the course has no standards' do
+      course = Verso::Course.new(:code => "1234", :edition => "1929",
+                                 :related_resources => [])
+      Verso::StandardsList.from_course(course).should be_empty
+    end
   end
 end

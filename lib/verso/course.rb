@@ -120,12 +120,7 @@ module Verso
     # @return [Verso::StandardsList] Standards bodies correlated to this
     #   course's tasks.
     def standards
-      @standards ||= if self.related_resources.include?("standards")
-                       StandardsList.from_course(self)
-                     else
-                       StandardsList.new(:code => code, :edition => edition,
-                                         :standards => [])
-                     end
+      @standards ||= StandardsList.from_course(self)
     end
 
     # Fetch a complete task given a task id.

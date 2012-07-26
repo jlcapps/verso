@@ -36,7 +36,12 @@ class StandardsList < Verso::Base
     # @param course [Verso::Course] A {Verso::Course}
     # @return [Verso::StandardsList] A {Verso::Course}'s standards
     def self.from_course(course)
-      StandardsList.new(:code => course.code, :edition => course.edition)
+      if course.related_resources.include?("standards")
+        StandardsList.new(:code => course.code, :edition => course.edition)
+      else
+        StandardsList.new(:code => course.code, :edition => course.edition,
+                          :standards => [])
+      end
     end
 
   private
