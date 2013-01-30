@@ -9,6 +9,8 @@ module Verso
   #   @return [String] Course code
   # @!attribute [r] edition
   #   @return [String] Course edition year
+  # @!attribute [r] id
+  #   @return [String] DutyArea ID
   # @!attribute [r] title
   #   @return [String] Duty Area title
   #
@@ -16,7 +18,7 @@ module Verso
   #   to a portion of the Task List resource. You should never need to
   #   instantiate one yourself.
   class DutyArea < Verso::Base
-    attr_reader :code, :edition, :title
+    attr_reader :code, :edition, :id, :title
 
     # Tasks within this Duty Area
     #

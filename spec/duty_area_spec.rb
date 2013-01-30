@@ -7,6 +7,20 @@ describe Verso::DutyArea do
     @da = Verso::CourseList.new(:code => "6320").last.duty_areas.last
   end
 
+  describe '#id' do
+    it 'responds' do
+      @da.should respond_to(:id)
+    end
+
+    it 'is a String' do
+      @da.id.should be_a(String)
+    end
+
+    it 'looks like an id' do
+      @da.id.should match(/^\d+$/)
+    end
+  end
+
   describe '#code' do
     it "responds" do
       @da.should respond_to(:code)
