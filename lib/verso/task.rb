@@ -11,7 +11,7 @@ module Verso
   # @!attribute [r] edition
   #   @return [String] Course edition year
   # @!attribute [r] id
-  #   @return [Fixnum] Task ID
+  #   @return [String] Task ID
   # @!attribute [r] sensitive
   #   @return [Boolean] Is this task sensitive?
   # @!attribute [r] statement

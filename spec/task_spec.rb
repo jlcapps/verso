@@ -81,7 +81,7 @@ describe Verso::Task do
       @task.should respond_to(:id)
     end
 
-    it 'is a Fixnum' do
+    it 'is a String' do
       @task.id.should be_a(String)
     end
 
