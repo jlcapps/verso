@@ -16,8 +16,8 @@ describe Verso::Cluster do
       @cluster.code.should be_a(String)
     end
 
-    it 'is formatted like CT1, CT2, etc.' do
-      @cluster.code.should match(/CT\d+/)
+    it 'is formatted like 1, 2, etc.' do
+      @cluster.code.should match(/\d+/)
     end
   end
 
