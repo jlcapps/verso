@@ -6,6 +6,7 @@ require 'net/http'
 require 'ostruct'
 
 # base/mixin/override
+require 'verso/error'
 require 'verso/base'
 require 'verso/hash'
 require 'verso/http_gettable'

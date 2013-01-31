@@ -126,4 +126,16 @@ describe Verso::Cluster do
       @cluster.title.should == 'Agriculture, Food and Natural Resources'
     end
   end
+
+  describe '#http_get' do
+    before do
+      @bad_cluster = Verso::Cluster.new(:id => 9999999999999999)
+    end
+
+    it 'raises ResourceNotFoundError when resource not found' do
+      expect { @bad_cluster.description }.to raise_error(
+        Verso::ResourceNotFoundError
+      )
+    end
+  end
 end

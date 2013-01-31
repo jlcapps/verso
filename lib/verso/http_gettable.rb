@@ -20,7 +20,12 @@ module Verso
     # HTTP GET the JSON resource
     # @return [String] JSON resource
     def http_get
-      Net::HTTP.get('api.cteresource.org', path, 80)
+      resp = Net::HTTP.get_response('api.cteresource.org', path, 80)
+      if resp.code != "200"
+        raise Verso::ResourceNotFoundError
+      else
+        resp.body
+      end
     end
 
     # @return [Hash] Resource hash

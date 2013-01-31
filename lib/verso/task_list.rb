@@ -42,7 +42,7 @@ module Verso
                               da.merge!(:code => code, :edition => edition)
                             )
                           end
-                      rescue NameError
+                      rescue NameError, Verso::ResourceNotFoundError
                         []
                       end
     end
