@@ -19,6 +19,7 @@ module Verso
   #   @option attrs [Fixnum] :id Cluster id *Required*
   class Cluster < Verso::Base
     include HTTPGettable
+    include Sluggable
     attr_reader :code, :description, :id, :postsecondary_info
 
     # Return VDOE Cluster contact. The contact will respond to #name, #email,
@@ -47,11 +48,6 @@ module Verso
     def pathways
       @pathways ||= get_attr(:pathways).
         collect { |p| Pathway.new(p) }
-    end
-
-    # @return [String] parameterized title
-    def slug
-      title.parameterize
     end
 
     # @return [String] Cluster title

@@ -82,4 +82,18 @@ describe Verso::Occupation do
       @occ.title.should be_a(String)
     end
   end
+
+  describe '#slug' do
+    it 'responds' do
+      @occ.should respond_to(:slug)
+    end
+
+    it 'is a string' do
+      @occ.slug.should be_a(String)
+    end
+
+    it 'looks like the title' do
+      @occ.slug.should == 'turf-farmer'
+    end
+  end
 end

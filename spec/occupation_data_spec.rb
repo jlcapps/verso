@@ -39,4 +39,34 @@ describe Verso::OccupationData do
       @od.occupations.first.should be_a(Verso::Occupation)
     end
   end
+
+  describe 'Verso::OccupationData.find_by_slugs' do
+    before do
+      @od = Verso::OccupationData.find_by_slugs(
+        'agriculture-food-and-natural-resources',
+        'agribusiness-systems',
+        'agricultural-commodity-broker'
+      )
+    end
+
+    it 'is an OccupationData' do
+      @od.should be_a(Verso::OccupationData)
+    end
+
+    it 'has the correct Cluster' do
+      @od.cluster.title.should == 'Agriculture, Food and Natural Resources'
+    end
+
+    it 'has the correct Pathway' do
+      @od.pathway.title.should == 'Agribusiness Systems'
+    end
+
+    it 'has only one Occupation' do
+      @od.occupations.count.should == 1
+    end
+
+    it 'has the correct Occupation' do
+      @od.occupations.first.title.should == 'Agricultural Commodity Broker'
+    end
+  end
 end

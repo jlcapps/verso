@@ -21,6 +21,7 @@ module Verso
   #   @option attrs [Fixnum] :id Occupation ID *Required*
   class Occupation < Verso::Base
     include HTTPGettable
+    include Sluggable
     attr_reader :description, :id, :preparations, :title
 
     # @return [Verso::Pathway] Pathway that is the parent of this occupation

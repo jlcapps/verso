@@ -99,6 +99,20 @@ describe Verso::Cluster do
     end
   end
 
+  describe '#slug' do
+    it 'responds' do
+      @cluster.should respond_to(:slug)
+    end
+
+    it 'is a string' do
+      @cluster.slug.should be_a(String)
+    end
+
+    it 'looks like the title' do
+      @cluster.slug.should == 'agriculture-food-and-natural-resources'
+    end
+  end
+
   describe '#title' do
     it 'responds' do
       @cluster.should respond_to(:title)

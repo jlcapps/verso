@@ -17,6 +17,7 @@ module Verso
   #   @option attrs [Fixnum] :id Pathway id *Required*
   class Pathway < Verso::Base
     include HTTPGettable
+    include Sluggable
     attr_reader :description, :id, :title
 
     # @return [Verso::Cluster] Parent Cluster

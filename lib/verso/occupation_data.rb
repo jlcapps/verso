@@ -39,9 +39,9 @@ module Verso
     # @param [String] slug Occupation slug
     # @return [Verso::OccupationData,nil] Containing only one Occupation
     def self.find_by_slugs(cslug, pslug, slug)
-      cluster = ClusterList.new.find { |c| c.title.parameterize == cslug }
-      pathway = cluster.pathways.find { |p| p.title.parameterize == pslug }
-      occupation = pathway.occupations.find { |o| o.title.parameterize == slug }
+      cluster = ClusterList.new.find { |c| c.slug== cslug }
+      pathway = cluster.pathways.find { |p| p.slug == pslug }
+      occupation = pathway.occupations.find { |o| o.slug == slug }
       OccupationData.new(
         { :cluster => { :title => cluster.title },
           :pathway => { :title => pathway.title },

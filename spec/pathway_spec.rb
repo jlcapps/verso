@@ -45,6 +45,20 @@ describe Verso::Pathway do
     end
   end
 
+  describe '#slug' do
+    it 'responds' do
+      @pathway.should respond_to(:slug)
+    end
+
+    it 'is a string' do
+      @pathway.slug.should be_a(String)
+    end
+
+    it 'looks like the title' do
+      @pathway.slug.should == 'agribusiness-systems'
+    end
+  end
+
   describe '#occupations' do
     it 'responds' do
       @pathway.should respond_to(:occupations)

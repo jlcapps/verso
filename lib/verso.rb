@@ -9,6 +9,7 @@ require 'ostruct'
 require 'verso/base'
 require 'verso/hash'
 require 'verso/http_gettable'
+require 'verso/sluggable'
 
 # resources and children
 require 'verso/cluster'
