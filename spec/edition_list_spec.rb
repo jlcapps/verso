@@ -1,8 +1,7 @@
 require 'spec_helper'
 require 'shared_verso_list_examples'
 
-describe Verso::EditionList do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::EditionList, :vcr do
 
   before(:each) do
     @list = Verso::EditionList.new

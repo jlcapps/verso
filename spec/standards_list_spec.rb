@@ -1,8 +1,7 @@
 require 'spec_helper'
 require 'shared_verso_list_examples'
 
-describe Verso::StandardsList do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::StandardsList, :vcr do
 
   before do
     @list = Verso::StandardsList.new(

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Verso::Extra do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::Extra, :vcr do
 
   before(:each) do
     @extra = Verso::CourseList.new(:code => "6320").last.extras.first

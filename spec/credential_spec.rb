@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Verso::Credential do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::Credential, :vcr do
   before do
     @credential = Verso::CredentialList.new.last
   end

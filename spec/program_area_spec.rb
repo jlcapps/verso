@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Verso::ProgramArea do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::ProgramArea, :vcr do
 
   before do
     @pa = Verso::ProgramArea.new("title" => "Career Connections")

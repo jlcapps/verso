@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Verso::Emphasis do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::Emphasis, :vcr do
 
   before do
     @emphasis = Verso::EmphasisList.new.last

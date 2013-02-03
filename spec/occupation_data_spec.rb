@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Verso::OccupationData do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::OccupationData, :vcr do
 
   before(:each) do
     @od = Verso::OccupationList.new(:text => "golf").first

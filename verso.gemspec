@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.add_runtime_dependency 'json'
   s.add_runtime_dependency 'addressable'
-  s.add_development_dependency "fakeweb"
+  s.add_development_dependency "webmock"
   s.add_development_dependency "redcarpet"
   s.add_development_dependency "rspec"
   s.add_development_dependency "vcr"

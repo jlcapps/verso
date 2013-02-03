@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Verso::Standard do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::Standard, :vcr do
 
   before do
     @standard = Verso::Standard.new(

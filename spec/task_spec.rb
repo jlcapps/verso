@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Verso::Task do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::Task, :vcr do
 
   before(:each) do
     @task = Verso::CourseList.new(:code => "6320").

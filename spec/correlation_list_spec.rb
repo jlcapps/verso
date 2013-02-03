@@ -1,8 +1,7 @@
 require 'spec_helper'
 require 'shared_verso_list_examples'
 
-describe Verso::CorrelationList do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::CorrelationList, :vcr do
 
   before(:each) do
     @list = Verso::CorrelationList.new(

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Verso::DutyArea do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::DutyArea, :vcr do
 
   before do
     @da = Verso::CourseList.new(:code => "6320").last.duty_areas.last

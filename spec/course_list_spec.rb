@@ -1,8 +1,7 @@
 require 'spec_helper'
 require 'shared_verso_list_examples'
 
-describe Verso::CourseList do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::CourseList, :vcr do
 
   describe 'search' do
     it "searches by code" do

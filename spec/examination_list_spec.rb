@@ -1,9 +1,7 @@
 require 'spec_helper'
 require 'shared_verso_list_examples'
 
-describe Verso::ExaminationList do
-  use_vcr_cassette :record => :new_episodes
-
+describe Verso::ExaminationList, :vcr, :vcr do
   before(:each) do
     @list = Verso::ExaminationList.new
     @kontained = OpenStruct

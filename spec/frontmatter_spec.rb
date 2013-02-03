@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Verso::Frontmatter do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::Frontmatter, :vcr do
 
   before(:each) do
     @fm = Verso::Frontmatter.new(:code => "6321",

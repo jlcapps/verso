@@ -1,8 +1,7 @@
 require 'spec_helper'
 require 'shared_verso_list_examples'
 
-describe Verso::ProgramAreaList do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::ProgramAreaList, :vcr do
 
   before do
     @list = Verso::ProgramAreaList.new

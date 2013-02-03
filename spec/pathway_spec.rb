@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Verso::Pathway do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::Pathway, :vcr do
 
   before do
     @pathway = Verso::ClusterList.new.first.pathways.first

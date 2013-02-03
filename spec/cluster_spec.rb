@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Verso::Cluster do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::Cluster, :vcr do
 
   before(:each) do
     @cluster = Verso::ClusterList.new.first

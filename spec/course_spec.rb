@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Verso::Course do
-  use_vcr_cassette :record => :new_episodes
+describe Verso::Course, :vcr do
 
   before do
     @course = Verso::Course.new(:code => "6321",
