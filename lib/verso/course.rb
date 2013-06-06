@@ -47,6 +47,11 @@ module Verso
     alias hs_credit_in_ms? hs_credit_in_ms
     alias osha_exempt? osha_exempt
 
+    # @return [String] HTML-formatted course notes
+    def notes
+      get_attr(:notes).to_s
+    end
+
     # @return [Array] Collection of certification {Verso::Credential} objects
     def certifications
       @certfications ||= credentials.select { |c| c.type == "Certification" }

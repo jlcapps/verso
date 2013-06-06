@@ -107,6 +107,21 @@ describe Verso::Course, :vcr do
     end
   end
 
+  describe '#notes' do
+    it 'responds' do
+      @course.should respond_to(:notes)
+    end
+
+    it 'is a String' do
+      @course.notes.should be_a(String)
+    end
+
+    it 'is still a String if the API sends nil' do
+      course = Verso::Course.new(:notes => nil)
+      course.notes.should be_a(String)
+    end
+  end
+
   describe '#duration' do
     it 'responds' do
       @course.should respond_to(:duration)
