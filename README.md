@@ -18,7 +18,7 @@ The verso gem has been tested with Ruby 2.0.0, 1.9.3, and 1.8.7.
 
 ## Quick Start
 
-The wrapper should make a great starting pointing for getting course,
+The wrapper should make a great starting point for getting course,
 curriculum, and occupation data out of Verso. The classes available in
 lib/verso correspond to the resources described in the [API
 documentation](http://api.cteresource.org/docs). The usual points of entry
