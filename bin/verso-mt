@@ -1,0 +1,142 @@
+#!/usr/bin/env ruby
+require 'csv'
+require 'optparse'
+require 'verso'
+
+module Verso
+  module ChainableSend
+    # takes a string of dot-separated method names and recursively calls
+    # Object#send with each
+    def chained_send(chain)
+      messages = chain.split('.')
+      if messages.length == 1
+        respond_to?(chain) ? send(chain) : ''
+      else
+        send(messages.first).
+          extend(Verso::ChainableSend).
+          chained_send(messages.slice(1, messages.length).join('.'))
+      end
+    end
+  end
+
+  class OccupationList
+  private
+
+    # confusingly, OccupationList is actually a list of OccupationData obj's
+    # monkey patch so it behaves as expected for this script
+    alias_method :occupations_datas, :occupations
+    def occupations
+      occupations_datas.flat_map { |od| od.occupations }
+    end
+  end
+
+  class OptionBucket
+    attr_accessor :resource, :params, :filters, :columns
+    def initialize(opts={})
+      @resource = opts[:resource] || 'course'
+      @params = opts[:params] || {}
+      @filters = opts[:filters] || {}
+      @columns = opts[:columns] || ['title', 'code']
+      fill!(opts[:argv] || ARGV)
+    end
+
+  private
+
+    def fill!(argv)
+      parser = OptionParser.new do |opts|
+        opts.banner = 'Usage: verso [options]'
+
+        opts.on('-h', '--helper', 'Show this message.') do
+          puts opts
+          exit
+        end
+
+        opts.on('-r', '--resource RES', ['course', 'credential', 'occupation'],
+                'API resource list to get',
+                'One of: course, credential, occupation.') do |res|
+          @resource = res
+        end
+
+        opts.on(
+          '-c', '--columns COLS', Array,
+          'Comma-separated list of resource attributes to display.') do |attrs|
+          @columns = attrs
+        end
+
+        opts.accept kv_pairs = Object.new do |val|
+          pairs = val.split('+')
+          raise OptionParser::InvalidArgument unless pairs.all? do |i|
+            i =~ /^[\w\s.\?]+:[\w\s.\*]+$/
+          end
+          pairs.inject({}) do |h, pair|
+            h[pair.split(':').first] = pair.split(':').last
+            h
+          end
+        end
+
+        opts.on(
+          '-f', '--filters FILTERS', kv_pairs,
+          'Plus-separated list of colon-separated PROP:VALUE pairs.') do |f|
+          @filters = f
+        end
+
+        opts.on(
+          '-q', '--query PARAMS', kv_pairs,
+          'Plus-separated list of colon-separated PARAM:VALUE pairs.',
+          'Parameters should correspond to those in the resource docs.') do |p|
+          @params = p
+        end
+      end
+      parser.parse!(argv)
+    end
+  end
+
+  class MultiTool
+    attr_reader :options
+    def initialize(options)
+      @options = options
+    end
+
+    def klass
+      eval("Verso::#{options.resource.capitalize}List")
+    end
+
+    def resources
+      klass.new(options.params).collect do |r|
+        r.extend(Verso::ChainableSend)
+      end
+    end
+
+    def filtered_resources
+      resources.select do |resource|
+        options.filters.all? do |k, v|
+          resource.chained_send(k).to_s =~ Regexp.new(v, Regexp::IGNORECASE)
+        end
+      end
+    end
+
+    def run(&block)
+      block.call(options, filtered_resources)
+    end
+  end
+end
+
+begin
+  options = Verso::OptionBucket.new
+rescue OptionParser::InvalidArgument => e
+  puts e
+  exit(1)
+end
+
+mt = Verso::MultiTool.new(options)
+mt.run do |options, resources|
+  puts CSV.generate_line(
+    options.columns.
+      collect { |c| "#{options.resource.capitalize} #{c.capitalize}" }
+  )
+  resources.each do |resource|
+    puts CSV.generate_line(
+      options.columns.collect { |col| resource.chained_send(col) }
+    )
+  end
+end
